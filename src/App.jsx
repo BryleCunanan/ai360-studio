@@ -1,4 +1,4 @@
-import { Button, Layout, theme } from "antd";
+import { Button, Flex, Layout, theme } from "antd";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 import Logo from "./components/Logo";
 import MenuList from "./components/MenuList";
@@ -20,7 +20,7 @@ function App() {
   };
 
   const {
-    token: { colorBgContainer, colorPrimary },
+    token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
   return (
@@ -46,7 +46,16 @@ function App() {
               icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             />
           </Header>
-          <Content>
+          <Content
+            style={{
+              margin: "24px 16px",
+              padding: 24,
+              minHeight: 280,
+              background: colorBgContainer,
+              borderRadius: borderRadiusLG,
+              textAlign: "center",
+            }}
+          >
             <Routes>
               <Route path="/" element={<Home />}></Route>
               <Route path="/intents" element={<Intent />}></Route>
