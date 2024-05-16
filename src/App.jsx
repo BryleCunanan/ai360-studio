@@ -9,6 +9,8 @@ import Home from "./pages/Home";
 import Intent from "./pages/Intent";
 import Entities from "./pages/Entities";
 import Knowledge from "./pages/Knowledge";
+import IntentDummy from "./pages/IntentDummy";
+import EntityDummy from "./pages/EntityDummy";
 
 const { Header, Sider, Content } = Layout;
 function App() {
@@ -61,6 +63,8 @@ function App() {
               <Route path="/intents" element={<Intent />}></Route>
               <Route path="/entities" element={<Entities />}></Route>
               <Route path="/knowledge" element={<Knowledge />}></Route>
+              <Route path="/intentdummy" element={<IntentDummy />}></Route>
+              <Route path="/entitydummy" element={<EntityDummy />}></Route>
             </Routes>
           </Content>
         </Layout>

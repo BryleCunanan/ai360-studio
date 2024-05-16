@@ -1,10 +1,19 @@
 import { Flex, Divider, List, Input, Button } from "antd";
+import { Link } from "react-router-dom";
 
 const data = [
-  "Reference Value",
-  "Reference Value",
-  "Reference Value",
-  "Reference Value",
+  <Link to="/entitydummy" style={{ width: 800 }}>
+    Reference value
+  </Link>,
+  <Link to="/entitydummy" style={{ width: 800 }}>
+    Reference value
+  </Link>,
+  <Link to="/entitydummy" style={{ width: 800 }}>
+    Reference value
+  </Link>,
+  <Link to="/entitydummy" style={{ width: 800 }}>
+    Reference value
+  </Link>,
 ];
 
 const boxStyle = {
@@ -30,6 +39,7 @@ const Entities = () => {
       <Divider />
       <div>
         <List
+          style={{ textAlign: "left" }}
           size="small"
           bordered
           dataSource={data}

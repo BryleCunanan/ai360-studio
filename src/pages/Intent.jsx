@@ -1,81 +1,50 @@
-import { Divider, Flex, Button, Input } from "antd";
-import React from "react";
+import { Divider, Input, List } from "antd";
+import { DeleteFilled } from "@ant-design/icons";
 
-const boxStyle = {
-  width: "100%",
-  height: 120,
-  marginTop: 15,
-};
+const { Search } = Input;
 
-const Intents = () => {
+const onSearch = (value, _e, info) => console.log(info?.source, value);
+
+const data = [
+  { title: "Dummy Intent" },
+  {
+    title: "other intents",
+  },
+];
+
+const Intent = () => {
   return (
     <>
       <div>
-        <Flex style={boxStyle} justify="space-evenly" align="center">
-          <Input
-            style={{ width: 800 }}
-            size="large"
-            placeholder="Intent Name"
-            variant="filled"
-          />
-          <Button type="primary">Save</Button>
-        </Flex>
+        <Search
+          placeholder="Search Intents"
+          allowClear
+          onSearch={onSearch}
+          style={{ width: 800 }}
+        />
       </div>
-      <Divider>Training Phrases</Divider>
+      <Divider orientation="left">Intents</Divider>
       <div>
-        <Input placeholder="Add user expression" />
-
-        <ul style={{ marginTop: 15 }}>
-          <li>
-            <Input placeholder="Existing expression" />
-          </li>
-          <li>
-            <Input placeholder="Existing expression" />
-          </li>
-          <li>
-            <Input placeholder="Existing expression" />
-          </li>
-          <li>
-            <Input placeholder="Existing expression" />
-          </li>
-        </ul>
-      </div>
-      <Divider>Actions</Divider>
-      <div>
-        <Input placeholder="Enter Action Name" />
-      </div>
-
-      <Divider>Responses</Divider>
-      <div>
-        <ul style={{ marginTop: 15 }}>
-          <li>
-            <Input placeholder="Existing expression" />
-          </li>
-          <li>
-            <Input placeholder="Existing expression" />
-          </li>
-          <li>
-            <Input placeholder="Existing expression" />
-          </li>
-          <li>
-            <Input placeholder="Existing expression" />
-          </li>
-          <li>
-            <Input placeholder="Existing expression" />
-          </li>
-          <li>
-            <Input placeholder="Existing expression" />
-          </li>
-          <li>
-            <Input placeholder="Existing expression" />
-          </li>
-          <li>
-            <Input placeholder="Existing expression" />
-          </li>
-        </ul>
+        <List
+          style={{ textAlign: "left" }}
+          itemLayout="horizontal"
+          dataSource={data}
+          renderItem={(item, index) => (
+            <List.Item
+              actions={[
+                <a key="list-intent-followup">Add Follow-up Intent</a>,
+                <a key="list-intent-delete">
+                  <DeleteFilled />
+                </a>,
+              ]}
+            >
+              <List.Item.Meta title={<a href="/intentdummy">{item.title}</a>} />
+            </List.Item>
+          )}
+        />
       </div>
     </>
   );
 };
 
-export default Intents;
+export default Intent;
