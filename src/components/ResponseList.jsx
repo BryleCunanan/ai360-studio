@@ -1,4 +1,5 @@
-import { List, Input } from "antd";
+import { List, Input, Button } from "antd";
+import { DeleteFilled } from "@ant-design/icons";
 
 const ResponseList = () => {
   const items = [
@@ -6,31 +7,61 @@ const ResponseList = () => {
       variant="borderless"
       placeholder="Existing expression"
       size="small"
+      suffix={
+        <Button type="text">
+          <DeleteFilled />
+        </Button>
+      }
     />,
     <Input
       variant="borderless"
       placeholder="Existing expression"
       size="small"
+      suffix={
+        <Button type="text">
+          <DeleteFilled />
+        </Button>
+      }
     />,
     <Input
       variant="borderless"
       placeholder="Existing expression"
       size="small"
+      suffix={
+        <Button type="text">
+          <DeleteFilled />
+        </Button>
+      }
     />,
     <Input
       variant="borderless"
       placeholder="Existing expression"
       size="small"
+      suffix={
+        <Button type="text">
+          <DeleteFilled />
+        </Button>
+      }
     />,
     <Input
       variant="borderless"
       placeholder="Existing expression"
       size="small"
+      suffix={
+        <Button type="text">
+          <DeleteFilled />
+        </Button>
+      }
     />,
     <Input
       variant="borderless"
       placeholder="Existing expression"
       size="small"
+      suffix={
+        <Button type="text">
+          <DeleteFilled />
+        </Button>
+      }
     />,
   ];
 

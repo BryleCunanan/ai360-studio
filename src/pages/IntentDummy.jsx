@@ -24,16 +24,19 @@ const IntentDummy = () => {
           <Button type="primary">Save</Button>
         </Flex>
       </div>
-      <Divider>Training Phrases</Divider>
+      <Divider orientation="left">Training Phrases</Divider>
       <div>
+        <p style={{ textAlign: "left" }}>
+          Write user expressions that are inline with this intent.
+        </p>
         <TrainingList />
       </div>
-      <Divider>Actions</Divider>
+      <Divider orientation="left">Actions</Divider>
       <div>
         <Input placeholder="Enter Action Name" size="large" />
       </div>
 
-      <Divider>Responses</Divider>
+      <Divider orientation="left">Responses</Divider>
       <div>
         <ResponseList />
       </div>
