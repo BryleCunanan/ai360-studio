@@ -56,3 +56,27 @@
 .toggle {
   margin-left: 15px;
 }
+
+.intent-item {
+  position: relative;
+}
+
+.intent-item:hover .follow-up-btn,
+.intent-item:hover .delete-btn {
+  display: block;
+}
+
+.follow-up-btn,
+.delete-btn {
+  display: none;
+  position: absolute;
+  transform: translateY(-50%);
+}
+
+.follow-up-btn {
+  right: 50px;
+}
+
+.delete-btn {
+  right: 20px;
+}
