@@ -1,5 +1,6 @@
 import { Menu } from "antd";
 import {
+  SettingFilled,
   MessageOutlined,
   ForkOutlined,
   BookOutlined,
@@ -23,6 +24,11 @@ const items = [
     label: "Knowledge",
     icon: <BookOutlined />,
     key: "/knowledge",
+  },
+  {
+    label: "Settings",
+    icon: <SettingFilled />,
+    key: "/settings",
   },
 ];
 

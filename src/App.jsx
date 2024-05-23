@@ -11,6 +11,7 @@ import Entities from "./pages/Entities";
 import Knowledge from "./pages/Knowledge";
 import IntentDummy from "./pages/IntentDummy";
 import EntityDummy from "./pages/EntityDummy";
+import Settings from "./pages/Settings";
 
 const { Header, Sider, Content } = Layout;
 function App() {
@@ -65,6 +66,7 @@ function App() {
               <Route path="/knowledge" element={<Knowledge />}></Route>
               <Route path="/intentdummy" element={<IntentDummy />}></Route>
               <Route path="/entitydummy" element={<EntityDummy />}></Route>
+              <Route path="/settings" element={<Settings />}></Route>
             </Routes>
           </Content>
         </Layout>
