@@ -1,5 +1,4 @@
 import { Divider, Input, List, Button, Flex } from "antd";
-import { DeleteFilled } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import IntentComponent from "../components/IntentComponent";
 

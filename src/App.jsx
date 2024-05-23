@@ -66,7 +66,7 @@ function App() {
               <Route path="/knowledge" element={<Knowledge />}></Route>
               <Route path="/intentdummy" element={<IntentDummy />}></Route>
               <Route path="/entitydummy" element={<EntityDummy />}></Route>
-              <Route path="/settings" element={<Settings />}></Route>
+              <Route path="/settings/*" element={<Settings />}></Route>
             </Routes>
           </Content>
         </Layout>
