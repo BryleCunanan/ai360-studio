@@ -43,6 +43,15 @@
   position: relative;
 }
 
+.settings-menu {
+  height: 83vh;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  font-size: 1rem;
+  position: relative;
+}
+
 .toggle-theme-btn {
   position: absolute;
   bottom: 30px;
@@ -79,4 +88,11 @@
 
 .delete-btn {
   right: 20px;
+}
+
+.user-modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 9999;
 }

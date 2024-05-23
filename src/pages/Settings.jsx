@@ -21,12 +21,7 @@ const Settings = () => {
   return (
     <Layout>
       <Sider>
-        <Menu
-          onClick={handleClick}
-          className="sidebar"
-          defaultSelectedKeys={"useraccess"}
-          mode="inline"
-        >
+        <Menu onClick={handleClick} className="settings-menu" mode="inline">
           {items.map((item) => (
             <Menu.Item key={item.key} icon={item.icon}>
               <NavLink to={item.key}>{item.label}</NavLink>
@@ -34,7 +29,7 @@ const Settings = () => {
           ))}
         </Menu>
       </Sider>
-      <Content>
+      <Content style={{ backgroundColor: "white" }}>
         <Outlet />
       </Content>
     </Layout>
