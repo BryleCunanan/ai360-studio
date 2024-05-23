@@ -37,8 +37,9 @@ const IntentComponent = () => {
         itemLayout="horizontal"
         dataSource={items}
         renderItem={(item, index) => (
-          <div className="intent-item">
+          <div>
             <List.Item
+              className="intent-item"
               actions={[
                 <Button
                   className="follow-up-btn"
@@ -64,6 +65,7 @@ const IntentComponent = () => {
               dataSource={item.followUps}
               renderItem={(followUp, followUpIndex) => (
                 <List.Item
+                  className="intent-"
                   actions={[
                     <Button
                       className="delete-btn"
