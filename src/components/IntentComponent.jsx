@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { List, Button, Input } from "antd";
+import { List, Button } from "antd";
 import { DeleteFilled } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const IntentComponent = () => {
   const [items, setItems] = useState([
@@ -57,7 +57,7 @@ const IntentComponent = () => {
                 </Button>,
               ]}
             >
-              <Link to="/intentdummy">{item.name}</Link>
+              <NavLink to="intentdummy">{item.name}</NavLink>
             </List.Item>
             <List
               style={{ paddingLeft: item.followUps.length > 0 ? "20px" : "0" }}
@@ -76,7 +76,7 @@ const IntentComponent = () => {
                     </Button>,
                   ]}
                 >
-                  <Link to="/intentdummy">{followUp.name}</Link>
+                  <NavLink to="intentdummy">{followUp.name}</NavLink>
                 </List.Item>
               )}
             />

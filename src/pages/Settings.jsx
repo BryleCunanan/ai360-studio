@@ -1,18 +1,17 @@
 import { Menu, Layout } from "antd";
 import { UserOutlined } from "@ant-design/icons";
-import { Routes, Route, Link } from "react-router-dom";
-import UserAccess from "./UserAccess";
+import { NavLink, Outlet } from "react-router-dom";
 const { Content, Sider } = Layout;
 
 const items = [
   {
     label: "User Access",
     icon: <UserOutlined />,
-    key: "/useraccess",
+    key: "useraccess",
   },
   {
     label: "Others",
-    key: "/other",
+    key: "others",
   },
 ];
 
@@ -24,21 +23,19 @@ const Settings = () => {
       <Sider>
         <Menu
           onClick={handleClick}
-          style={{ width: 256 }}
-          defaultSelectedKeys={["aa"]}
+          className="sidebar"
+          defaultSelectedKeys={"useraccess"}
           mode="inline"
         >
           {items.map((item) => (
             <Menu.Item key={item.key} icon={item.icon}>
-              <Link>{item.label}</Link>
+              <NavLink to={item.key}>{item.label}</NavLink>
             </Menu.Item>
           ))}
         </Menu>
       </Sider>
       <Content>
-        <Routes>
-          <Route path="/useraccess" element={<UserAccess />} />
-        </Routes>
+        <Outlet />
       </Content>
     </Layout>
   );

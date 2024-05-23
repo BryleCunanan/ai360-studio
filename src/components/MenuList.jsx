@@ -6,7 +6,7 @@ import {
   BookOutlined,
   HomeOutlined,
 } from "@ant-design/icons";
-import { Link, useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 const items = [
   { label: "Home", icon: <HomeOutlined />, key: "/" },
@@ -44,7 +44,7 @@ const MenuList = ({ darkTheme }) => {
     >
       {items.map((item) => (
         <Menu.Item key={item.key} icon={item.icon}>
-          <Link to={item.key}>{item.label}</Link>
+          <NavLink to={item.key}>{item.label}</NavLink>
         </Menu.Item>
       ))}
     </Menu>
