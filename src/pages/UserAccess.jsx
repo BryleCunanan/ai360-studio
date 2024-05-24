@@ -1,4 +1,4 @@
-import { Table, Modal } from "antd";
+import { Table, Modal, Button, Flex } from "antd";
 import { useState } from "react";
 import UserForm from "../components/UserForm";
 
@@ -42,15 +42,28 @@ const UserAccess = () => {
   const [userData, setUserData] = useState([]);
 
   return (
-    <div>
+    <>
+      <Flex vertical={true} align="self-end" style={{ marginBottom: 20 }}>
+        <Button
+          type="primary"
+          style={{ width: 100 }}
+          onClick={() => {
+            setUserData({});
+            setModalOpen(true);
+          }}
+        >
+          Add User
+        </Button>
+      </Flex>
+
       <Table
         dataSource={dataSource.map((item) => ({ ...item, key: item._id }))}
         columns={columns}
+        pagination={false}
         onRow={(record, rowIndex) => {
           return {
             onClick: () => {
               setUserData(dataSource[rowIndex]);
-              console.log(userData);
               setModalOpen(true);
             },
           };
@@ -65,14 +78,13 @@ const UserAccess = () => {
         footer={null}
         onOk={() => setModalOpen(false)}
         onCancel={() => setModalOpen(false)}
-        styles={{ body: { height: "88vh" } }}
+        styles={{ body: { height: "93vh" } }}
         preserve={false}
         destroyOnClose
-        on
       >
         <UserForm data={userData} />
       </Modal>
-    </div>
+    </>
   );
 };
 
