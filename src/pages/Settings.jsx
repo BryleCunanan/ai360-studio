@@ -5,9 +5,9 @@ const { Content, Sider } = Layout;
 
 const items = [
   {
-    label: "User Access",
+    label: "Users",
     icon: <UserOutlined />,
-    key: "useraccess",
+    key: "users",
   },
   {
     label: "Others",
