@@ -45,6 +45,9 @@ const UserAccess = () => {
         title="aa "
         className="user-modal"
         open={modalOpen}
+        width="600px"
+        maskClosable={false}
+        footer={null}
         onOk={() => setModalOpen(false)}
         onCancel={() => setModalOpen(false)}
         styles={{ body: { height: "88vh" } }}
