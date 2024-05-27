@@ -16,6 +16,7 @@ import IntentIndex from "./pages/IntentIndex";
 import EntityIndex from "./pages/EntityIndex";
 import UserAccess from "./pages/UserAccess";
 import OtherPage from "./pages/OtherPage";
+import axios from "axios";
 
 const router = createBrowserRouter(
   createRoutesFromElements(

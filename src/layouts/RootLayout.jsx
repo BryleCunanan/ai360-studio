@@ -6,7 +6,7 @@ import { useState } from "react";
 import ToggleThemeButton from "../components/ToggleThemeButton";
 import { Outlet } from "react-router-dom";
 import LoginForm from "../components/LoginForm";
-
+import axios from "axios";
 const { Header, Sider, Content } = Layout;
 const RootLayout = () => {
   const [darkTheme, setDarkTheme] = useState(true);
@@ -16,6 +16,8 @@ const RootLayout = () => {
   const toggleTheme = () => {
     setDarkTheme(!darkTheme);
   };
+  axios.defaults.headers.common["Authorization"] =
+    localStorage.getItem("token");
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -23,16 +25,6 @@ const RootLayout = () => {
 
   const handleLogin = () => {
     setModalOpen(true);
-    // axios
-    //   .post("/login_url", {
-    //     username: "romeo",
-    //     password: "romoepogu",
-    //   })
-    //   .then((result) => {
-    //     localStorage.setItem("token", "Bearer " + result.data.token);
-    //     axios.defaults.headers.common["Authorization"] =
-    //       "Bearer " + result.data.token;
-    //   });
   };
 
   return (
