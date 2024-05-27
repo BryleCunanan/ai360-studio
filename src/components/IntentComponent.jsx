@@ -1,13 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, Component, useEffect } from "react";
 import { List, Button } from "antd";
 import { DeleteFilled } from "@ant-design/icons";
 import { Link, NavLink } from "react-router-dom";
+import axios from "axios";
 
 const IntentComponent = () => {
-  const [items, setItems] = useState([
-    { name: "Dummy Intent", followUps: [] },
-    { name: "others", followUps: [] },
-  ]);
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://172.17.21.48:3000/intent")
+      .then((response) => {
+        // console.log(response.data);
+        setItems(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   const handleAddFollowUp = (index) => {
     const parentIntent = items[index];
@@ -16,6 +26,9 @@ const IntentComponent = () => {
       name: `${parentIntent.name} - custom`,
     };
     const updatedItems = [...items];
+    if (!updatedItems[index].followUps) {
+      updatedItems[index].followUps = []; // Initialize followUps if it doesn't exist
+    }
     updatedItems[index].followUps.push(newFollowUp);
     setItems(updatedItems);
   };
@@ -57,12 +70,14 @@ const IntentComponent = () => {
                 </Button>,
               ]}
             >
-              <NavLink to="intentdummy">{item.name}</NavLink>
+              <NavLink to={item._id}>{item.intentName}</NavLink>
             </List.Item>
             <List
-              style={{ paddingLeft: item.followUps.length > 0 ? "20px" : "0" }}
+              style={{
+                paddingLeft: (item.followUps?.length ?? 0) > 0 ? "20px" : "0",
+              }}
               locale={{ emptyText: " " }}
-              dataSource={item.followUps}
+              dataSource={item.followUps ?? []}
               renderItem={(followUp, followUpIndex) => (
                 <List.Item
                   className="intent-"
@@ -71,9 +86,8 @@ const IntentComponent = () => {
                       className="delete-btn"
                       type="text"
                       onClick={() => handleDeleteIntent(index, followUpIndex)}
-                    >
-                      <DeleteFilled />
-                    </Button>,
+                      icon={<DeleteFilled />}
+                    />,
                   ]}
                 >
                   <NavLink to="intentdummy">{followUp.name}</NavLink>
