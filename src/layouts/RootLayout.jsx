@@ -1,15 +1,17 @@
-import { Button, Layout, theme } from "antd";
+import { Button, Layout, theme, Modal } from "antd";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 import Logo from "../components/Logo";
 import MenuList from "../components/MenuList";
 import { useState } from "react";
 import ToggleThemeButton from "../components/ToggleThemeButton";
 import { Outlet } from "react-router-dom";
+import LoginForm from "../components/LoginForm";
 
 const { Header, Sider, Content } = Layout;
 const RootLayout = () => {
   const [darkTheme, setDarkTheme] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const toggleTheme = () => {
     setDarkTheme(!darkTheme);
@@ -18,6 +20,20 @@ const RootLayout = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+  const handleLogin = () => {
+    setModalOpen(true);
+    // axios
+    //   .post("/login_url", {
+    //     username: "romeo",
+    //     password: "romoepogu",
+    //   })
+    //   .then((result) => {
+    //     localStorage.setItem("token", "Bearer " + result.data.token);
+    //     axios.defaults.headers.common["Authorization"] =
+    //       "Bearer " + result.data.token;
+    //   });
+  };
 
   return (
     <Layout>
@@ -33,13 +49,41 @@ const RootLayout = () => {
         <ToggleThemeButton darkTheme={darkTheme} toggleTheme={toggleTheme} />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }}>
+        <Header
+          style={{
+            padding: 0,
+            background: colorBgContainer,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <Button
             type="text"
             className="toggle"
             onClick={() => setCollapsed(!collapsed)}
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           />
+          <Button
+            style={{ marginRight: 20 }}
+            type="primary"
+            onClick={handleLogin}
+          >
+            Login
+          </Button>
+          <Modal
+            title="Login"
+            open={modalOpen}
+            width="600px"
+            maskClosable={false}
+            footer={null}
+            onOk={() => setModalOpen(false)}
+            onCancel={() => setModalOpen(false)}
+            preserve={false}
+            destroyOnClose
+          >
+            <LoginForm />
+          </Modal>
         </Header>
         <Content
           style={{

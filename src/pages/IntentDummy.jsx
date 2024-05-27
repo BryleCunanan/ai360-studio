@@ -1,23 +1,32 @@
 import { Divider, Flex, Button, Input, List } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TrainingList from "../components/TrainingList";
 import ResponseList from "../components/ResponseList";
 import axios from "axios";
+import { useParams } from "react-router-dom";
+
 const boxStyle = {
   width: "100%",
   height: 120,
   marginTop: 15,
 };
-axios
-  .get("http://172.17.21.48:3000/intent/664ed6c207cfa842b5bf605a")
-  .then((response) => {
-    // console.log(response.data);
-    console.log(response.data);
-  })
-  .catch((error) => {
-    console.log(error);
-  });
+
 const IntentDummy = () => {
+  let { id } = useParams();
+  const [responseData, setResponseData] = useState([]);
+  useEffect(() => {
+    axios
+      .get("http://172.17.21.48:3000/intent/" + id)
+      .then((response) => {
+        console.log(response.data);
+        setResponseData(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  // console.log("Data: ", data);
   return (
     <>
       <div>
@@ -27,9 +36,16 @@ const IntentDummy = () => {
             size="large"
             placeholder="Intent Name"
             variant="filled"
-            defaultValue="Dummy Intent"
+            value={responseData.intentName}
           />
-          <Button type="primary">Save</Button>
+          <Button
+            type="primary"
+            onClick={() => {
+              console.log(responseData.intentName);
+            }}
+          >
+            Save
+          </Button>
         </Flex>
       </div>
       <Divider orientation="left">Training Phrases</Divider>
@@ -37,16 +53,7 @@ const IntentDummy = () => {
         <p style={{ textAlign: "left" }}>
           Write user expressions that are inline with this intent.
         </p>
-        <TrainingList />
-      </div>
-      <Divider orientation="left">Actions</Divider>
-      <div>
-        <Input placeholder="Enter Action Name" size="large" />
-      </div>
-
-      <Divider orientation="left">Responses</Divider>
-      <div>
-        <ResponseList />
+        <TrainingList data={responseData.intentExamples} />
       </div>
     </>
   );

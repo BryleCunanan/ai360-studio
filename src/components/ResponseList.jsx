@@ -1,77 +1,22 @@
 import { List, Input, Button } from "antd";
-import { DeleteFilled } from "@ant-design/icons";
 
-const ResponseList = () => {
-  const items = [
-    <Input
-      variant="borderless"
-      placeholder="Existing expression"
-      size="small"
-      suffix={
-        <Button type="text">
-          <DeleteFilled />
-        </Button>
-      }
-    />,
-    <Input
-      variant="borderless"
-      placeholder="Existing expression"
-      size="small"
-      suffix={
-        <Button type="text">
-          <DeleteFilled />
-        </Button>
-      }
-    />,
-    <Input
-      variant="borderless"
-      placeholder="Existing expression"
-      size="small"
-      suffix={
-        <Button type="text">
-          <DeleteFilled />
-        </Button>
-      }
-    />,
-    <Input
-      variant="borderless"
-      placeholder="Existing expression"
-      size="small"
-      suffix={
-        <Button type="text">
-          <DeleteFilled />
-        </Button>
-      }
-    />,
-    <Input
-      variant="borderless"
-      placeholder="Existing expression"
-      size="small"
-      suffix={
-        <Button type="text">
-          <DeleteFilled />
-        </Button>
-      }
-    />,
-    <Input
-      variant="borderless"
-      placeholder="Existing expression"
-      size="small"
-      suffix={
-        <Button type="text">
-          <DeleteFilled />
-        </Button>
-      }
-    />,
-  ];
-
+const ResponseList = ({ data }) => {
+  console.log("Response: ", data);
   return (
     <div>
       <List
-        dataSource={items}
+        dataSource={[data]}
         bordered
         style={{ marginTop: 20 }}
-        renderItem={(item, index) => <List.Item>{item}</List.Item>}
+        renderItem={(item, index) => (
+          <Input
+            variant="borderless"
+            placeholder="Existing expression"
+            size="small"
+            defaultValue={item}
+            key={index}
+          />
+        )}
       />
     </div>
   );

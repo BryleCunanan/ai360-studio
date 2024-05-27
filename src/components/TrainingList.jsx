@@ -9,67 +9,13 @@ const onSelect = (option) => {
   console.log("Select", option);
 };
 
-const TrainingList = () => {
+const TrainingList = ({ data }) => {
+  console.log(data);
   const options = [
     { value: "sinigang", label: "sinigang", entity: "ulam" },
     { value: "menudo", label: "menudo", entity: "ulam" },
     { value: "sisig", label: "sisig", entity: "ulam" },
     { value: "shirt", label: "shirt", entity: "clothing" },
-  ];
-
-  const items = [
-    <>
-      <Mentions
-        size="small"
-        variant="borderless"
-        placeholder="Existing expression"
-        onChange={onChange}
-        onSelect={onSelect}
-        options={options}
-      />
-      <Button type="text">
-        <DeleteFilled />
-      </Button>
-    </>,
-    <>
-      <Mentions
-        size="small"
-        variant="borderless"
-        placeholder="Existing expression"
-        onChange={onChange}
-        onSelect={onSelect}
-        options={options}
-      />
-      <Button type="text">
-        <DeleteFilled />
-      </Button>
-    </>,
-    <>
-      <Mentions
-        size="small"
-        variant="borderless"
-        placeholder="Existing expression"
-        onChange={onChange}
-        onSelect={onSelect}
-        options={options}
-      />
-      <Button type="text">
-        <DeleteFilled />
-      </Button>
-    </>,
-    <>
-      <Mentions
-        size="small"
-        variant="borderless"
-        placeholder="Existing expression"
-        onChange={onChange}
-        onSelect={onSelect}
-        options={options}
-      />
-      <Button type="text">
-        <DeleteFilled />
-      </Button>
-    </>,
   ];
 
   return (
@@ -84,12 +30,23 @@ const TrainingList = () => {
       />
 
       <List
-        dataSource={items}
+        dataSource={data}
         bordered
         renderItem={(item, index) => (
-          <div>
-            <List.Item>{item}</List.Item>
-          </div>
+          <List.Item>
+            {item.name}
+            <Mentions
+              style={{ width: "100%" }}
+              defaultValue={data[index]}
+              options={options}
+              onChange={onChange}
+              onSelect={onSelect}
+              variant="Borderless"
+            />
+            <Button type="text">
+              <DeleteFilled />
+            </Button>
+          </List.Item>
         )}
       />
     </div>

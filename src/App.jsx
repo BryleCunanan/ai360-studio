@@ -23,7 +23,7 @@ const router = createBrowserRouter(
       <Route index element={<Home />} />
       <Route path="intents" element={<Intent />}>
         <Route index element={<IntentIndex />} />
-        <Route path="intentdummy" element={<IntentDummy />} />
+        <Route path=":id" element={<IntentDummy />} />
       </Route>
       <Route path="entities" element={<Entities />}>
         <Route index element={<EntityIndex />} />
