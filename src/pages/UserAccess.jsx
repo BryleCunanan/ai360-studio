@@ -1,23 +1,9 @@
 import { Table, Modal, Button, Flex } from "antd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import UserForm from "../components/UserForm";
+import axios from "axios";
 
 const handleClick = () => {};
-
-const dataSource = [
-  {
-    _id: "664ee24d8e82b6971dee1cdd",
-    username: "romeo",
-    email: "romeo.d@shoredigitalinc.com",
-    role: "admin",
-  },
-  {
-    _id: "66501f6eb7a6d3e885510003",
-    username: "bryle",
-    email: "bryle.c@shoredigitalinc.com",
-    role: "tester",
-  },
-];
 
 const columns = [
   {
@@ -40,6 +26,19 @@ const columns = [
 const UserAccess = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [userData, setUserData] = useState([]);
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://172.17.21.48:3000/user")
+      .then((response) => {
+        console.log(response.data);
+        setItems(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   return (
     <>
@@ -57,13 +56,13 @@ const UserAccess = () => {
       </Flex>
 
       <Table
-        dataSource={dataSource.map((item) => ({ ...item, key: item._id }))}
+        dataSource={items.map((item) => ({ ...item, key: item._id }))}
         columns={columns}
         pagination={false}
         onRow={(record, rowIndex) => {
           return {
             onClick: () => {
-              setUserData(dataSource[rowIndex]);
+              setUserData(items[rowIndex]);
               setModalOpen(true);
             },
           };
