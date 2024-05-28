@@ -52,7 +52,6 @@ const IntentIndex = () => {
     if (typeof value != "string") {
       value = event.target.value;
     }
-    console.log("Search:", value);
     if (value.trim() === "") {
       setFilteredItems(items);
     } else {
