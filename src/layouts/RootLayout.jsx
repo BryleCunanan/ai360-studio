@@ -14,6 +14,7 @@ const RootLayout = () => {
   const [darkTheme, setDarkTheme] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const toggleTheme = () => {
     setDarkTheme(!darkTheme);
@@ -62,13 +63,15 @@ const RootLayout = () => {
             onClick={() => setCollapsed(!collapsed)}
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           />
-          <Button
-            style={{ marginRight: 20 }}
-            type="primary"
-            onClick={handleLogin}
-          >
-            Login
-          </Button>
+          {isLoggedIn ? null : (
+            <Button
+              style={{ marginRight: 20 }}
+              type="primary"
+              onClick={handleLogin}
+            >
+              Login
+            </Button>
+          )}
 
           <Modal
             title="Login"
@@ -80,7 +83,10 @@ const RootLayout = () => {
             destroyOnClose
             onCancel={handleCancel}
           >
-            <LoginForm handleModalUpdate={setModalOpen} />
+            <LoginForm
+              handleModalUpdate={setModalOpen}
+              handleLoginButton={setIsLoggedIn}
+            />
           </Modal>
         </Header>
         <Content

@@ -1,7 +1,18 @@
 import React from "react";
 
 const Knowledge = () => {
-  return <div>Knowledge</div>;
+  return (
+    <h1
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "50%",
+      }}
+    >
+      Coming Soon...
+    </h1>
+  );
 };
 
 export default Knowledge;

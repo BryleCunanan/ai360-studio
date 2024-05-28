@@ -1,7 +1,7 @@
 import { Button, Checkbox, Form, Input, message } from "antd";
 import axios from "axios";
 
-const LoginForm = ({ handleModalUpdate }) => {
+const LoginForm = ({ handleModalUpdate, handleLoginButton }) => {
   const onFinish = (values) => {
     console.log("Success:", values);
     axios
@@ -11,7 +11,7 @@ const LoginForm = ({ handleModalUpdate }) => {
       })
       .then((result) => {
         localStorage.setItem("token", "Bearer " + result.data.token);
-
+        handleLoginButton(true);
         handleModalUpdate(false);
         message.success("Login Successful");
       })
