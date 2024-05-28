@@ -1,4 +1,4 @@
-import { Button, Layout, theme, Modal, message } from "antd";
+import { Button, Layout, theme, Modal } from "antd";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 import Logo from "../components/Logo";
 import MenuList from "../components/MenuList";
@@ -27,6 +27,10 @@ const RootLayout = () => {
 
   const handleLogin = () => {
     setModalOpen(true);
+  };
+
+  const handleCancel = () => {
+    setModalOpen(false);
   };
 
   return (
@@ -65,18 +69,18 @@ const RootLayout = () => {
           >
             Login
           </Button>
+
           <Modal
             title="Login"
             open={modalOpen}
             width="600px"
             maskClosable={false}
             footer={null}
-            onOk={() => setModalOpen(false)}
-            onCancel={() => setModalOpen(false)}
             preserve={false}
             destroyOnClose
+            onCancel={handleCancel}
           >
-            <LoginForm />
+            <LoginForm handleModalUpdate={setModalOpen} />
           </Modal>
         </Header>
         <Content

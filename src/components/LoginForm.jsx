@@ -1,27 +1,27 @@
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Checkbox, Form, Input, message } from "antd";
 import axios from "axios";
 
-const onFinish = (values) => {
-  console.log("Success:", values);
-  axios
-    .post("http://172.17.21.48:3000/login", {
-      email: values.username,
-      password: values.password,
-    })
-    .then((result) => {
-      localStorage.setItem("token", "Bearer " + result.data.token);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-  axios.defaults.headers.common["Authorization"] =
-    localStorage.getItem("token");
-};
-const onFinishFailed = (errorInfo) => {
-  console.log("Failed:", errorInfo);
-};
+const LoginForm = ({ handleModalUpdate }) => {
+  const onFinish = (values) => {
+    console.log("Success:", values);
+    axios
+      .post("http://172.17.21.48:3000/login", {
+        email: values.username,
+        password: values.password,
+      })
+      .then((result) => {
+        localStorage.setItem("token", "Bearer " + result.data.token);
 
-const LoginForm = () => {
+        handleModalUpdate(false);
+        message.success("Login Successful");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    axios.defaults.headers.common["Authorization"] =
+      localStorage.getItem("token");
+  };
+
   return (
     <Form
       name="login"
@@ -38,7 +38,6 @@ const LoginForm = () => {
         remember: true,
       }}
       onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
       <Form.Item

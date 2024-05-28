@@ -86,6 +86,7 @@ const IntentIndex = () => {
           onSearch={onSearch}
           onChange={onSearch}
           style={{ width: "100%", maxWidth: 800 }}
+          size="large"
         />
         <NavLink to="intentdummy">
           <Button type="primary">Create Intent</Button>
