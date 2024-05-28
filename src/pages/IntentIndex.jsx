@@ -49,18 +49,33 @@ const IntentIndex = () => {
   };
 
   const onSearch = (value) => {
+    if (typeof value != "string") {
+      value = event.target.value;
+    }
     console.log("Search:", value);
-
     if (value.trim() === "") {
-      // If search value is empty, show all intents
       setFilteredItems(items);
     } else {
-      // Filter items based on search value
-      const filtered = items.filter((item) =>
-        item.intentName.toLowerCase().includes(value.toLowerCase())
-      );
-      setFilteredItems(filtered);
+      axios
+        .get("http://172.17.21.48:3000/intent/search/" + value)
+        .then((response) => {
+          setFilteredItems(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
+
+    // if (value.trim() === "") {
+    //   // If search value is empty, show all intents
+    //   setFilteredItems(items);
+    // } else {
+    //   // Filter items based on search value
+    //   const filtered = items.filter((item) =>
+    //     item.intentName.toLowerCase().includes(value.toLowerCase())
+    //   );
+    //   setFilteredItems(filtered);
+    // }
   };
 
   return (
@@ -70,6 +85,7 @@ const IntentIndex = () => {
           placeholder="Search Intents"
           allowClear
           onSearch={onSearch}
+          onChange={onSearch}
           style={{ width: "100%", maxWidth: 800 }}
         />
         <NavLink to="intentdummy">
