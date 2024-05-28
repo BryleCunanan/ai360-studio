@@ -3,8 +3,6 @@ import { useState, useEffect } from "react";
 import UserForm from "../components/UserForm";
 import axios from "axios";
 
-const handleClick = () => {};
-
 const columns = [
   {
     title: "Username",
