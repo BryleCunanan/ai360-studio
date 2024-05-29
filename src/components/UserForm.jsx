@@ -1,26 +1,41 @@
 import { Button, Select, Form, Input } from "antd";
+import axios from "axios";
 
-const items = [
-  {
-    label: "Viewer",
-    value: "viewer",
-  },
-  { label: "Editor", value: "editor" },
-  { label: "Tester", value: "tester" },
-  { label: "Admin", value: "admin" },
-];
-
-const onFinish = () => {};
-
-const onFinishFailed = () => {};
-
-const handleChange = (value) => {
-  console.log("role:", value);
-};
-
-const UserForm = (data) => {
-  data = data.data;
+const UserForm = ({ data, handleModalOpen }) => {
+  // console.log(data);
+  // data = data.data;
   console.log(data);
+
+  const items = [
+    {
+      label: "Viewer",
+      value: "viewer",
+    },
+    { label: "Editor", value: "editor" },
+    { label: "Tester", value: "tester" },
+    { label: "Admin", value: "admin" },
+  ];
+
+  const onFinish = (value) => {
+    console.log("Finished: ", value);
+    axios
+      .post("http://172.17.21.48:3000/user", value)
+      .then((result) => {
+        console.log(result);
+        handleModalOpen(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const onFinishFailed = () => {
+    console.log("Not Finished.");
+  };
+
+  const handleChange = (value) => {
+    console.log("role:", value);
+  };
 
   return (
     <Form
@@ -40,8 +55,8 @@ const UserForm = (data) => {
       autoComplete="off"
     >
       <Form.Item
-        label="Name"
-        name="name"
+        label="Username"
+        name="username"
         rules={[{ required: true, message: "Name required!" }]}
         initialValue={data.username}
       >

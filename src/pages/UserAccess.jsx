@@ -36,7 +36,7 @@ const UserAccess = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [modalOpen]);
 
   return (
     <>
@@ -79,7 +79,7 @@ const UserAccess = () => {
         preserve={false}
         destroyOnClose
       >
-        <UserForm data={userData} />
+        <UserForm data={userData} handleModalOpen={setModalOpen} />
       </Modal>
     </>
   );
