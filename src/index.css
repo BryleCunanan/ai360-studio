@@ -89,10 +89,3 @@
 .delete-btn {
   right: 20px;
 }
-
-.user-modal {
-  position: fixed;
-  top: 0;
-  right: 0;
-  z-index: 9999;
-}

@@ -1,9 +1,7 @@
 import { Button, Select, Form, Input } from "antd";
 import axios from "axios";
 
-const UserForm = ({ data, handleModalOpen }) => {
-  // console.log(data);
-  // data = data.data;
+const UserForm = ({ data, handleDrawerOpen }) => {
   console.log(data);
 
   const items = [
@@ -22,7 +20,7 @@ const UserForm = ({ data, handleModalOpen }) => {
       .post("http://172.17.21.48:3000/user", value)
       .then((result) => {
         console.log(result);
-        handleModalOpen(false);
+        handleDrawerOpen(false);
       })
       .catch((error) => {
         console.log(error);

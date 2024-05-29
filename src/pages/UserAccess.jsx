@@ -1,4 +1,4 @@
-import { Table, Modal, Button, Flex } from "antd";
+import { Table, Drawer, Button, Flex } from "antd";
 import { useState, useEffect } from "react";
 import UserForm from "../components/UserForm";
 import axios from "axios";
@@ -22,7 +22,7 @@ const columns = [
 ];
 
 const UserAccess = () => {
-  const [modalOpen, setModalOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [userData, setUserData] = useState([]);
   const [items, setItems] = useState([]);
 
@@ -36,7 +36,7 @@ const UserAccess = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, [modalOpen]);
+  }, [drawerOpen]);
 
   return (
     <>
@@ -46,7 +46,7 @@ const UserAccess = () => {
           style={{ width: 100 }}
           onClick={() => {
             setUserData({});
-            setModalOpen(true);
+            setDrawerOpen(true);
           }}
         >
           Add User
@@ -61,26 +61,23 @@ const UserAccess = () => {
           return {
             onClick: () => {
               setUserData(items[rowIndex]);
-              setModalOpen(true);
+              setDrawerOpen(true);
             },
           };
         }}
       />
-      <Modal
+      <Drawer
         title="User Information"
-        className="user-modal"
-        open={modalOpen}
+        className="user-drawer"
+        open={drawerOpen}
         width="600px"
         maskClosable={false}
         footer={null}
-        onOk={() => setModalOpen(false)}
-        onCancel={() => setModalOpen(false)}
-        styles={{ body: { height: "93vh" } }}
-        preserve={false}
+        onClose={() => setDrawerOpen(false)}
         destroyOnClose
       >
-        <UserForm data={userData} handleModalOpen={setModalOpen} />
-      </Modal>
+        <UserForm data={userData} handleDrawerOpen={setDrawerOpen} />
+      </Drawer>
     </>
   );
 };
