@@ -1,4 +1,4 @@
-import { Divider, Flex, Button, Input, List } from "antd";
+import { Divider, Flex, Button, Input, List, Form } from "antd";
 import React, { useEffect, useState } from "react";
 import TrainingList from "../components/TrainingList";
 import ResponseList from "../components/ResponseList";
@@ -13,22 +13,46 @@ const boxStyle = {
 
 const IntentDummy = () => {
   let { id } = useParams();
-  const [responseData, setResponseData] = useState([]);
-  useEffect(() => {
-    axios
-      .get("http://172.17.21.48:3000/intent/" + id)
-      .then((response) => {
-        console.log(response.data);
-        setResponseData(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+  const [intentExamples, setIntentExamples] = useState([]);
+  const [intentName, setIntentName] = useState();
 
-  // console.log("Data: ", data);
+  if (location.pathname != "/intents/intentdummy") {
+    useEffect(() => {
+      axios
+        .get("http://172.17.21.48:3000/intent/" + id)
+        .then((response) => {
+          setIntentExamples(response.data.intentExamples);
+          setIntentName(response.data.intentName);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }, []);
+  }
+
+  const handleSubmit = () => {
+    const values = {
+      intentName,
+      intentExamples,
+      followUp: false,
+    };
+    console.log(values);
+
+    // axios
+    //   .post("http://172.17.21.48:3000/intent", values)
+    //   .then((result) => {
+    //     console.log(result);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
+  };
+
+  const handleIntentName = () => {
+    setIntentName(event.target.value);
+  };
   return (
-    <>
+    <div>
       <div>
         <Flex style={boxStyle} justify="space-evenly" align="center">
           <Input
@@ -36,14 +60,11 @@ const IntentDummy = () => {
             size="large"
             placeholder="Intent Name"
             variant="filled"
-            value={responseData.intentName}
+            value={intentName}
+            onChange={handleIntentName}
           />
-          <Button
-            type="primary"
-            onClick={() => {
-              console.log(responseData.intentName);
-            }}
-          >
+
+          <Button type="primary" onClick={handleSubmit}>
             Save
           </Button>
         </Flex>
@@ -53,9 +74,12 @@ const IntentDummy = () => {
         <p style={{ textAlign: "left" }}>
           Write user expressions that are inline with this intent.
         </p>
-        <TrainingList data={responseData.intentExamples} />
+        <TrainingList
+          data={intentExamples}
+          setIntentExamples={setIntentExamples}
+        />
       </div>
-    </>
+    </div>
   );
 };
 

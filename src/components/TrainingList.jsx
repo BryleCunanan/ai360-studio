@@ -1,47 +1,57 @@
-import { Button, Mentions, List } from "antd";
+import { Button, List, Input } from "antd";
 import { DeleteFilled } from "@ant-design/icons";
+import { useEffect, useState } from "react";
 
-const onChange = (value) => {
-  console.log("Change:", value);
-};
+const TrainingList = ({ data, setIntentExamples }) => {
+  const [intentData, setIntentData] = useState(data);
+  const [inputValue, setInputValue] = useState("");
 
-const onSelect = (option) => {
-  console.log("Select", option);
-};
+  console.log("intentData; ", intentData);
 
-const TrainingList = ({ data }) => {
-  console.log(data);
-  const options = [
-    { value: "sinigang", label: "sinigang", entity: "ulam" },
-    { value: "menudo", label: "menudo", entity: "ulam" },
-    { value: "sisig", label: "sisig", entity: "ulam" },
-    { value: "shirt", label: "shirt", entity: "clothing" },
-  ];
+  const handlePressEnter = () => {
+    console.log("Entered Function: ", inputValue);
+    if (inputValue.trim() !== "") {
+      const newItem = inputValue.trim();
+      const newIntentData = [...intentData, newItem];
+      setIntentData(newIntentData);
+      setIntentExamples(newIntentData);
+      setInputValue("");
+    }
+  };
+
+  const handlePhraseChange = (value, index) => {
+    const newIntent = [...intentData];
+    newIntent[index] = value;
+    console.log(newIntent);
+    setIntentData(newIntent);
+    setIntentExamples(newIntent);
+  };
 
   return (
     <div style={{ textAlign: "left" }}>
-      <Mentions
+      <Input
         placeholder="Add user expression"
         size="large"
-        onChange={onChange}
-        onSelect={onSelect}
-        options={options}
+        value={inputValue}
         style={{ marginTop: 20, marginBottom: 20 }}
+        onChange={(e) => {
+          setInputValue(e.target.value);
+        }}
+        onPressEnter={handlePressEnter}
       />
-
       <List
-        dataSource={data}
+        dataSource={intentData}
         bordered
         renderItem={(item, index) => (
-          <List.Item>
-            {item.name}
-            <Mentions
+          <List.Item key={index}>
+            {item}
+
+            <Input
               style={{ width: "100%" }}
-              defaultValue={data[index]}
-              options={options}
-              onChange={onChange}
-              onSelect={onSelect}
+              value={intentData[index]}
               variant="Borderless"
+              key={item}
+              onChange={(e) => handlePhraseChange(e.target.value, index)}
             />
             <Button type="text">
               <DeleteFilled />
