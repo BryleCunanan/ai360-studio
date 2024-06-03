@@ -30,7 +30,6 @@ const UserAccess = () => {
     axios
       .get(import.meta.env.APP_SERVER_URL + "/user")
       .then((response) => {
-        console.log(response.data);
         setItems(response.data);
       })
       .catch((error) => {

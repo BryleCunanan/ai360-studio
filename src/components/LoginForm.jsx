@@ -3,9 +3,8 @@ import axios from "axios";
 
 const LoginForm = ({ handleModalUpdate, handleLoginButton }) => {
   const onFinish = (values) => {
-    console.log("Success:", values);
     axios
-      .post("http://172.17.21.48:3000/login", {
+      .post(import.meta.env.APP_SERVER_URL + "/login", {
         email: values.username,
         password: values.password,
       })

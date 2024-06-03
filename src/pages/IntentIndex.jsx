@@ -14,7 +14,6 @@ const IntentIndex = () => {
     axios
       .get(import.meta.env.APP_SERVER_URL + "/intent")
       .then((response) => {
-        // console.log(response.data);
         setItems(response.data);
         setFilteredItems(response.data);
       })

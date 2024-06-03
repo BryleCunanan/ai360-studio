@@ -33,12 +33,12 @@ const items = [
 ];
 
 const MenuList = ({ darkTheme }) => {
-  const location = useLocation(); // Move this inside the functional component
+  const location = useLocation();
   const selectedMenuItem = items.find((item) => location.pathname === item.key);
 
   return (
     <Menu
-      theme={darkTheme ? "dark" : "light"} // Removed extra space after "dark"
+      theme={darkTheme ? "dark" : "light"}
       className="menu-bar"
       selectedKeys={selectedMenuItem ? [selectedMenuItem.key] : []}
     >

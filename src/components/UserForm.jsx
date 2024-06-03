@@ -2,8 +2,6 @@ import { Button, Select, Form, Input } from "antd";
 import axios from "axios";
 
 const UserForm = ({ data, handleDrawerOpen }) => {
-  console.log(data);
-
   const items = [
     {
       label: "Viewer",
@@ -15,9 +13,8 @@ const UserForm = ({ data, handleDrawerOpen }) => {
   ];
 
   const onFinish = (value) => {
-    console.log("Finished: ", value);
     axios
-      .post("http://172.17.21.48:3000/user", value)
+      .post(import.meta.env.APP_SERVER_URL + "/user", value)
       .then((result) => {
         console.log(result);
         handleDrawerOpen(false);

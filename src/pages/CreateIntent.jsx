@@ -1,7 +1,6 @@
 import { Divider, Flex, Button, Input, List, Form } from "antd";
 import React, { useEffect, useState } from "react";
 import { DeleteFilled } from "@ant-design/icons";
-import ResponseList from "../components/ResponseList";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
@@ -69,7 +68,6 @@ const CreateIntent = () => {
   const handlePhraseChange = (value, index) => {
     const newIntent = [...intentData];
     newIntent[index] = value;
-    console.log(newIntent);
     setIntentData(newIntent);
     setIntentExamples(newIntent);
   };
