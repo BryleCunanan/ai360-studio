@@ -21,7 +21,7 @@ const CreateIntent = () => {
   if (location.pathname != "/intents/new") {
     useEffect(() => {
       axios
-        .get("http://172.17.21.48:3000/intent/" + id)
+        .get(import.meta.env.APP_SERVER_URL + "/intent/" + id)
         .then((response) => {
           setIntentExamples(response.data.intentExamples);
           setIntentData(response.data.intentExamples);

@@ -28,7 +28,7 @@ const UserAccess = () => {
 
   useEffect(() => {
     axios
-      .get("http://172.17.21.48:3000/user")
+      .get(import.meta.env.APP_SERVER_URL + "/user")
       .then((response) => {
         console.log(response.data);
         setItems(response.data);

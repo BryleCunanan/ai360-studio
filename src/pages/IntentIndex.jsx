@@ -7,13 +7,12 @@ import axios from "axios";
 const { Search } = Input;
 
 const IntentIndex = () => {
-  const [items, setItems] = useState([]); //Array of Intents
-  const [filteredItems, setFilteredItems] = useState([]); // Filtered array of Intents
+  const [items, setItems] = useState([]);
+  const [filteredItems, setFilteredItems] = useState([]);
 
-  //Call for intent data when component mounts using API & do this only once
   useEffect(() => {
     axios
-      .get("http://172.17.21.48:3000/intent")
+      .get(import.meta.env.APP_SERVER_URL + "/intent")
       .then((response) => {
         // console.log(response.data);
         setItems(response.data);
@@ -32,7 +31,7 @@ const IntentIndex = () => {
     };
     const updatedItems = [...items];
     if (!updatedItems[index].followUps) {
-      updatedItems[index].followUps = []; // Initialize followUps if it doesn't exist
+      updatedItems[index].followUps = [];
     }
     updatedItems[index].followUps.push(newFollowUp);
     setItems(updatedItems);
@@ -56,7 +55,7 @@ const IntentIndex = () => {
       setFilteredItems(items);
     } else {
       axios
-        .get("http://172.17.21.48:3000/intent/search/" + value)
+        .get(import.meta.env.APP_SERVER_URL + "/intent/search/" + value)
         .then((response) => {
           setFilteredItems(response.data);
         })
@@ -64,17 +63,6 @@ const IntentIndex = () => {
           console.log(error);
         });
     }
-
-    // if (value.trim() === "") {
-    //   // If search value is empty, show all intents
-    //   setFilteredItems(items);
-    // } else {
-    //   // Filter items based on search value
-    //   const filtered = items.filter((item) =>
-    //     item.intentName.toLowerCase().includes(value.toLowerCase())
-    //   );
-    //   setFilteredItems(filtered);
-    // }
   };
 
   return (
