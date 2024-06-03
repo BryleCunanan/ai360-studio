@@ -10,6 +10,7 @@ const LoginForm = ({ handleModalUpdate, handleLoginButton }) => {
       })
       .then((result) => {
         localStorage.setItem("token", "Bearer " + result.data.token);
+        localStorage.setItem("username", result.data.user.name);
         handleLoginButton(true);
         handleModalUpdate(false);
         message.success("Login Successful");

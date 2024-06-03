@@ -1,8 +1,12 @@
 import { Button, Layout, theme, Modal } from "antd";
-import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
+import {
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons";
 import Logo from "../components/Logo";
 import MenuList from "../components/MenuList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ToggleThemeButton from "../components/ToggleThemeButton";
 import { Outlet } from "react-router-dom";
 import LoginForm from "../components/LoginForm";
@@ -14,17 +18,34 @@ const RootLayout = () => {
   const [darkTheme, setDarkTheme] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const toggleTheme = () => {
-    setDarkTheme(!darkTheme);
-  };
-  axios.defaults.headers.common["Authorization"] =
-    localStorage.getItem("token");
+  const [isLoggedIn, setIsLoggedIn] = useState(null);
+  const [username, setUsername] = useState();
+  const [loading, setLoading] = useState(true);
 
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+  useEffect(() => {
+    axios.defaults.headers.common["Authorization"] =
+      localStorage.getItem("token");
+
+    setUsername(localStorage.getItem("username"));
+
+    if (axios.defaults.headers.common["Authorization"]) {
+      console.log("Logged in");
+      setIsLoggedIn(true);
+    } else {
+      console.log("Logged out");
+      setIsLoggedIn(false);
+    }
+
+    setLoading(false);
+  }, []);
+
+  const toggleTheme = () => {
+    setDarkTheme(!darkTheme);
+  };
 
   const handleLogin = () => {
     setModalOpen(true);
@@ -35,74 +56,102 @@ const RootLayout = () => {
   };
 
   return (
-    <Layout>
-      <Sider
-        collapsed={collapsed}
-        collapsible
-        trigger={null}
-        className="sidebar"
-        theme={darkTheme ? "dark" : "light"}
-      >
-        <Logo />
-        <MenuList darkTheme={darkTheme} />
-        <ToggleThemeButton darkTheme={darkTheme} toggleTheme={toggleTheme} />
-      </Sider>
-      <Layout>
-        <Header
+    <>
+      {loading ? (
+        <div
           style={{
-            padding: 0,
-            background: colorBgContainer,
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: "center",
             alignItems: "center",
           }}
         >
-          <Button
-            type="text"
-            className="toggle"
-            onClick={() => setCollapsed(!collapsed)}
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          <LoadingOutlined
+            style={{
+              fontSize: 50,
+            }}
           />
-          {isLoggedIn ? null : (
-            <Button
-              style={{ marginRight: 20 }}
-              type="primary"
-              onClick={handleLogin}
-            >
-              Login
-            </Button>
-          )}
-
-          <Modal
-            title="Login"
-            open={modalOpen}
-            width="600px"
-            maskClosable={false}
-            footer={null}
-            preserve={false}
-            destroyOnClose
-            onCancel={handleCancel}
+        </div>
+      ) : (
+        <Layout>
+          <Sider
+            collapsed={collapsed}
+            collapsible
+            trigger={null}
+            className="sidebar"
+            theme={darkTheme ? "dark" : "light"}
           >
-            <LoginForm
-              handleModalUpdate={setModalOpen}
-              handleLoginButton={setIsLoggedIn}
+            <Logo />
+            <MenuList darkTheme={darkTheme} isLoggedIn={isLoggedIn} />
+            <ToggleThemeButton
+              darkTheme={darkTheme}
+              toggleTheme={toggleTheme}
             />
-          </Modal>
-        </Header>
-        <Content
-          style={{
-            margin: "24px 16px",
-            padding: 24,
-            minHeight: 280,
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
-            textAlign: "center",
-          }}
-        >
-          <Outlet />
-        </Content>
-      </Layout>
-    </Layout>
+          </Sider>
+          <Layout>
+            <Header
+              style={{
+                padding: 0,
+                background: colorBgContainer,
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Button
+                type="text"
+                className="toggle"
+                onClick={() => setCollapsed(!collapsed)}
+                icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              />
+              {isLoggedIn ? (
+                <div style={{ marginRight: 20 }}>Hello, {username}</div>
+              ) : (
+                <Button
+                  style={{ marginRight: 20 }}
+                  type="primary"
+                  onClick={handleLogin}
+                >
+                  Login
+                </Button>
+              )}
+
+              <Modal
+                title="Login"
+                open={modalOpen}
+                width="600px"
+                maskClosable={false}
+                footer={null}
+                preserve={false}
+                destroyOnClose
+                onCancel={handleCancel}
+              >
+                <LoginForm
+                  handleModalUpdate={setModalOpen}
+                  handleLoginButton={setIsLoggedIn}
+                  handleUsername={setUsername}
+                />
+              </Modal>
+            </Header>
+            <Content
+              style={{
+                margin: "24px 16px",
+                padding: 24,
+                minHeight: 280,
+                background: colorBgContainer,
+                borderRadius: borderRadiusLG,
+                textAlign: "center",
+              }}
+            >
+              <Outlet />
+            </Content>
+          </Layout>
+        </Layout>
+      )}
+    </>
   );
 };
 
