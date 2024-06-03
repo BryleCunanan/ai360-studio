@@ -23,32 +23,39 @@ const IntentIndex = () => {
   }, []);
 
   const handleAddFollowUp = (index) => {
-    const parentIntent = items[index];
+    const updatedItems = [...items];
+    const parentIntent = updatedItems[index];
     const newFollowUp = {
       ...parentIntent,
-      name: `${parentIntent.name} - custom`,
+      name: `${parentIntent.intentName} - custom`,
     };
-    const updatedItems = [...items];
-    if (!updatedItems[index].followUps) {
-      updatedItems[index].followUps = [];
+    if (!parentIntent.followUps) {
+      parentIntent.followUps = [];
     }
-    updatedItems[index].followUps.push(newFollowUp);
+    parentIntent.followUps.push(newFollowUp);
     setItems(updatedItems);
+    setFilteredItems(updatedItems);
   };
 
-  const handleDeleteIntent = (index, followUpIndex) => {
+  const handleDeleteFollowUp = (index, followUpIndex) => {
     const updatedItems = [...items];
     if (followUpIndex !== undefined) {
       updatedItems[index].followUps.splice(followUpIndex, 1);
-    } else {
-      updatedItems.splice(index, 1);
     }
     setItems(updatedItems);
+    setFilteredItems(updatedItems);
   };
 
-  const onSearch = (value) => {
+  const handleDeleteIntent = (index) => {
+    const updatedItems = [...items];
+    updatedItems.splice(index, 1);
+    setItems(updatedItems);
+    setFilteredItems(updatedItems);
+  };
+
+  const onSearch = (e, value) => {
     if (typeof value != "string") {
-      value = event.target.value;
+      value = e.target.value;
     }
     if (value.trim() === "") {
       setFilteredItems(items);
@@ -86,7 +93,7 @@ const IntentIndex = () => {
           itemLayout="horizontal"
           dataSource={filteredItems}
           renderItem={(item, index) => (
-            <div>
+            <div key={item._id}>
               <List.Item
                 className="intent-item"
                 actions={[
@@ -117,17 +124,18 @@ const IntentIndex = () => {
                 dataSource={item.followUps ?? []}
                 renderItem={(followUp, followUpIndex) => (
                   <List.Item
-                    className="intent-"
                     actions={[
                       <Button
                         className="delete-btn"
                         type="text"
-                        onClick={() => handleDeleteIntent(index, followUpIndex)}
+                        onClick={() =>
+                          handleDeleteFollowUp(index, followUpIndex)
+                        }
                         icon={<DeleteFilled />}
                       />,
                     ]}
                   >
-                    <NavLink to="intentdummy">{followUp.name}</NavLink>
+                    <NavLink to={followUp._id}>{followUp.name}</NavLink>
                   </List.Item>
                 )}
               />
