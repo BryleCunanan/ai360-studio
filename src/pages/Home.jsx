@@ -2,19 +2,6 @@ import { Row, Col, Card, Space, Skeleton, Flex } from "antd";
 import React from "react";
 
 const Home = () => {
-  const cardData = [
-    {
-      title: "Card 1",
-      content: <Skeleton paragraph={{ rows: 10 }} />,
-    },
-    {
-      title: "Card 2",
-      content:
-        "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.",
-    },
-    // Add more card data as needed
-  ];
-
   return (
     <Row gutter={[16, 16]}>
       <Col span={24}>
