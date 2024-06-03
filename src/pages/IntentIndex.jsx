@@ -88,7 +88,7 @@ const IntentIndex = () => {
           style={{ width: "100%", maxWidth: 800 }}
           size="large"
         />
-        <NavLink to="intentdummy">
+        <NavLink to="new">
           <Button type="primary">Create Intent</Button>
         </NavLink>
       </Flex>

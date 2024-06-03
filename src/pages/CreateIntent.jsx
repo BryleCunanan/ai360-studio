@@ -11,14 +11,14 @@ const boxStyle = {
   marginTop: 15,
 };
 
-const IntentDummy = () => {
+const CreateIntent = () => {
   let { id } = useParams();
   const [intentExamples, setIntentExamples] = useState([]);
   const [intentName, setIntentName] = useState();
   const [intentData, setIntentData] = useState([]);
   const [inputValue, setInputValue] = useState("");
 
-  if (location.pathname != "/intents/intentdummy") {
+  if (location.pathname != "/intents/new") {
     useEffect(() => {
       axios
         .get("http://172.17.21.48:3000/intent/" + id)
@@ -130,4 +130,4 @@ const IntentDummy = () => {
   );
 };
 
-export default IntentDummy;
+export default CreateIntent;

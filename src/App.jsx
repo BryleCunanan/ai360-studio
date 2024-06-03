@@ -8,7 +8,7 @@ import Home from "./pages/Home";
 import Intent from "./pages/Intent";
 import Entities from "./pages/Entities";
 import Knowledge from "./pages/Knowledge";
-import IntentDummy from "./pages/IntentDummy";
+import CreateIntent from "./pages/CreateIntent";
 import EntityDummy from "./pages/EntityDummy";
 import Settings from "./pages/Settings";
 import RootLayout from "./layouts/RootLayout";
@@ -16,7 +16,6 @@ import IntentIndex from "./pages/IntentIndex";
 import EntityIndex from "./pages/EntityIndex";
 import UserAccess from "./pages/UserAccess";
 import OtherPage from "./pages/OtherPage";
-import axios from "axios";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -24,7 +23,7 @@ const router = createBrowserRouter(
       <Route index element={<Home />} />
       <Route path="intents" element={<Intent />}>
         <Route index element={<IntentIndex />} />
-        <Route path=":id" element={<IntentDummy />} />
+        <Route path=":id" element={<CreateIntent />} />
       </Route>
       <Route path="entities" element={<Entities />}>
         <Route index element={<EntityIndex />} />
