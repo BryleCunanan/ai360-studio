@@ -1,7 +1,7 @@
-import { Divider, Input, List, Button, Flex } from "antd";
+import { Divider, Input, List, Button, Flex, message } from "antd";
 import { NavLink } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { DeleteFilled } from "@ant-design/icons";
+import { useState, useEffect, useRef } from "react";
+import { DeleteFilled, UndoOutlined } from "@ant-design/icons";
 import axios from "axios";
 
 const { Search } = Input;
@@ -9,6 +9,8 @@ const { Search } = Input;
 const IntentIndex = () => {
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
+  const [hiddenItems, setHiddenItems] = useState([]);
+  const confirmDeleteRef = useRef(true);
 
   useEffect(() => {
     axios
@@ -47,10 +49,46 @@ const IntentIndex = () => {
   };
 
   const handleDeleteIntent = (index) => {
-    const updatedItems = [...items];
-    updatedItems.splice(index, 1);
-    setItems(updatedItems);
-    setFilteredItems(updatedItems);
+    const newHiddenItems = [...hiddenItems];
+    newHiddenItems[index] = true;
+    setHiddenItems(newHiddenItems);
+    confirmDeleteRef.current = true;
+
+    message.open({
+      content: (
+        <span>
+          Intent "{items[index].intentName}" was deleted.
+          <Divider type="vertical" />
+          <Button
+            type="text"
+            icon={<UndoOutlined />}
+            onClick={() => handleUndo(index, items[index].intentName)}
+          />
+        </span>
+      ),
+      duration: 5,
+      onClose: () => {
+        if (confirmDeleteRef.current) {
+          console.log("Deleting... ");
+          axios
+            .post(import.meta.env.APP_SERVER_URL + "/story/delete", [
+              items[index]._id,
+            ])
+            .then((result) => {
+              console.log("Deleted: ", result);
+            });
+        }
+      },
+      key: items[index].intentName,
+    });
+  };
+
+  const handleUndo = (index, key) => {
+    const newHiddenItems = [...hiddenItems];
+    newHiddenItems[index] = false;
+    setHiddenItems(newHiddenItems);
+    confirmDeleteRef.current = false;
+    message.destroy(key);
   };
 
   const onSearch = (e, value) => {
@@ -77,7 +115,6 @@ const IntentIndex = () => {
         <Search
           placeholder="Search Intents"
           allowClear
-          onSearch={onSearch}
           onChange={onSearch}
           style={{ width: "100%", maxWidth: 800 }}
           size="large"
@@ -92,55 +129,59 @@ const IntentIndex = () => {
           style={{ textAlign: "left" }}
           itemLayout="horizontal"
           dataSource={filteredItems}
-          renderItem={(item, index) => (
-            <div key={item._id}>
-              <List.Item
-                className="intent-item"
-                actions={[
-                  <Button
-                    className="follow-up-btn"
-                    type="text"
-                    onClick={() => handleAddFollowUp(index)}
-                  >
-                    Add Follow-up Intent
-                  </Button>,
-                  <Button
-                    className="delete-btn"
-                    type="text"
-                    onClick={() => handleDeleteIntent(index)}
-                  >
-                    <DeleteFilled />
-                  </Button>,
-                ]}
-                key={item._id}
-              >
-                <NavLink to={item._id}>{item.intentName}</NavLink>
-              </List.Item>
-              <List
-                style={{
-                  paddingLeft: (item.followUps?.length ?? 0) > 0 ? "20px" : "0",
-                }}
-                locale={{ emptyText: " " }}
-                dataSource={item.followUps ?? []}
-                renderItem={(followUp, followUpIndex) => (
-                  <List.Item
-                    actions={[
-                      <Button
-                        className="delete-btn"
-                        type="text"
-                        onClick={() =>
-                          handleDeleteFollowUp(index, followUpIndex)
-                        }
-                        icon={<DeleteFilled />}
-                      />,
-                    ]}
-                  >
-                    <NavLink to={followUp._id}>{followUp.name}</NavLink>
-                  </List.Item>
-                )}
-              />
-            </div>
-          )}
+          renderItem={(item, index) =>
+            !hiddenItems[index] && (
+              <div key={item._id}>
+                <List.Item
+                  style={{}}
+                  className="intent-item"
+                  actions={[
+                    <Button
+                      className="follow-up-btn"
+                      type="text"
+                      onClick={() => handleAddFollowUp(index)}
+                    >
+                      Add Follow-up Intent
+                    </Button>,
+                    <Button
+                      className="delete-btn"
+                      type="text"
+                      onClick={() => handleDeleteIntent(index)}
+                    >
+                      <DeleteFilled />
+                    </Button>,
+                  ]}
+                  key={item._id}
+                >
+                  <NavLink to={item._id}>{item.intentName}</NavLink>
+                </List.Item>
+                <List
+                  style={{
+                    paddingLeft:
+                      (item.followUps?.length ?? 0) > 0 ? "20px" : "0",
+                  }}
+                  locale={{ emptyText: " " }}
+                  dataSource={item.followUps ?? []}
+                  renderItem={(followUp, followUpIndex) => (
+                    <List.Item
+                      actions={[
+                        <Button
+                          className="delete-btn"
+                          type="text"
+                          onClick={() =>
+                            handleDeleteFollowUp(index, followUpIndex)
+                          }
+                          icon={<DeleteFilled />}
+                        />,
+                      ]}
+                    >
+                      <NavLink to={followUp._id}>{followUp.name}</NavLink>
+                    </List.Item>
+                  )}
+                />
+              </div>
+            )
+          }
         />
       </div>
     </>
