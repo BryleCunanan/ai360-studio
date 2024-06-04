@@ -57,17 +57,7 @@ const RootLayout = () => {
   return (
     <>
       {loading ? (
-        <div
-          style={{
-            position: "fixed",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
+        <div className="loading-icon">
           <LoadingOutlined
             style={{
               fontSize: 50,

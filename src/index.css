@@ -89,3 +89,13 @@
 .delete-btn {
   right: 20px;
 }
+
+.loading-icon {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

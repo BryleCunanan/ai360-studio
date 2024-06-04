@@ -1,4 +1,5 @@
-import { Divider, Flex, Button, Input, List, Form } from "antd";
+import { Divider, Flex, Button, Input, List } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import { DeleteFilled } from "@ant-design/icons";
 import axios from "axios";
@@ -12,52 +13,54 @@ const boxStyle = {
 
 const CreateIntent = () => {
   let { id } = useParams();
-  const [intentExamples, setIntentExamples] = useState([]);
-  const [intentName, setIntentName] = useState();
+  const [intentName, setIntentName] = useState("");
   const [intentData, setIntentData] = useState([]);
-  const [intentInputValue, setIntentInputValue] = useState("");
-  const [knowledgeValue, setKnowledgeValue] = useState("");
+  const [intentInput, setIntentInput] = useState("");
+  const [knowledgeInput, setKnowledgeInput] = useState("");
   const [knowledgeData, setKnowledgeData] = useState([]);
   const [knowledgeID, setKnowledgeID] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  if (location.pathname != "/intents/new") {
-    useEffect(() => {
+  useEffect(() => {
+    if (location.pathname !== "/intents/new") {
       axios
-        .get(import.meta.env.APP_SERVER_URL + "/intent/" + id)
+        .get(`${import.meta.env.APP_SERVER_URL}/intent/${id}`)
         .then((response) => {
-          setIntentExamples(response.data.intentExamples);
           setIntentData(response.data.intentExamples);
           setIntentName(response.data.intentName);
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
         });
 
       axios
-        .get(import.meta.env.APP_SERVER_URL + "/knowledge/" + id)
+        .get(`${import.meta.env.APP_SERVER_URL}/knowledge/${id}`)
         .then((response) => {
           setKnowledgeData(response.data.knowledge);
           setKnowledgeID(response.data._id);
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
         });
-    }, []);
-  }
+    }
+    setIsLoading(false);
+  }, [id, location.pathname]);
 
   const handleSubmit = () => {
     const intentValues = {
       intentName,
-      intentExamples,
+      intentExamples: intentData,
       followUp: false,
     };
 
     const knowledgeValues = {
+      intentNameId: id,
       knowledge: knowledgeData,
     };
+
     console.log(knowledgeValues);
 
-    if (location.pathname == "/intents/new") {
+    if (location.pathname === "/intents/new") {
       axios
         .post(import.meta.env.APP_SERVER_URL + "/intent", intentValues)
         .then((result) => {
@@ -66,17 +69,24 @@ const CreateIntent = () => {
         .catch((error) => {
           console.log(error);
         });
+      axios
+        .post(import.meta.env.APP_SERVER_URL + "/knowledge", knowledgeValues)
+        .then((result) => {
+          console.log(result);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     } else {
-      // console.log(import.meta.env.APP_SERVER_URL + "/intent/" + id);
-      // axios
-      //   .post(import.meta.env.APP_SERVER_URL + "/intent/" + id, intentValues)
-      //   .then((result) => {
-      //     console.log(result.data);
-      //   })
-      //   .catch((error) => {
-      //     console.log(error);
-      //   });
-
+      console.log(import.meta.env.APP_SERVER_URL + "/intent/" + id);
+      axios
+        .post(import.meta.env.APP_SERVER_URL + "/intent/" + id, intentValues)
+        .then((result) => {
+          console.log(result.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
       axios
         .post(
           import.meta.env.APP_SERVER_URL + "/knowledge/" + knowledgeID,
@@ -91,132 +101,161 @@ const CreateIntent = () => {
     }
   };
 
-  const handleIntentName = () => {
-    setIntentName(event.target.value);
+  const handleIntentName = (e) => {
+    setIntentName(e.target.value);
   };
 
-  const handleInputEnter = () => {
-    console.log("Entered Input: ", intentInputValue);
-    if (intentInputValue.trim() !== "") {
-      const newItem = intentInputValue.trim();
-      const newIntentData = [...intentData, newItem];
-      setIntentData(newIntentData);
-      setIntentExamples(newIntentData);
-      setIntentInputValue("");
+  const handleEnter = (type) => {
+    if (type === "phrase") {
+      console.log("Entered Input: ", intentInput);
+      if (intentInput.trim() !== "") {
+        const newItem = intentInput.trim();
+        const newIntentData = [...intentData, newItem];
+        setIntentData(newIntentData);
+        setIntentInput("");
+      }
+    } else if (type === "knowledge") {
+      console.log("Entered Knowledge: ", knowledgeInput);
+      if (knowledgeInput.trim() !== "") {
+        const newItem = knowledgeInput.trim();
+        const newKnowledge = [...knowledgeData, newItem];
+        setKnowledgeData(newKnowledge);
+        setKnowledgeInput("");
+      }
     }
   };
 
-  const handleKnowledgeEnter = () => {
-    console.log("Entered Knowledge: ", knowledgeValue);
-    if (knowledgeValue.trim() !== "") {
-      const newItem = knowledgeValue.trim();
-      const newKnowledge = [...knowledgeData, newItem];
+  const handleChange = (value, index, type) => {
+    if (type === "phrase") {
+      const newIntent = [...intentData];
+      newIntent[index] = value;
+      setIntentData(newIntent);
+    } else if (type === "knowledge") {
+      const newKnowledge = [...knowledgeData];
+      newKnowledge[index] = value;
       setKnowledgeData(newKnowledge);
-      setIntentExamples(newKnowledge);
-      setKnowledgeValue("");
     }
   };
 
-  const handleIntentChange = (value, index) => {
-    const newIntent = [...intentData];
-    newIntent[index] = value;
-    setIntentData(newIntent);
-    setIntentExamples(newIntent);
-  };
-  const handleKnowledgeChange = (value, index) => {
-    const newKnowldge = [...knowledgeData];
-    newKnowldge[index] = value;
-    setKnowledgeData(newKnowldge);
+  const handleDelete = (index, type) => {
+    if (type === "phrase") {
+      const updatedItems = [...intentData];
+      updatedItems.splice(index, 1);
+      console.log(updatedItems);
+      setIntentData(updatedItems);
+    } else if (type === "knowledge") {
+      const updatedItems = [...knowledgeData];
+      updatedItems.splice(index, 1);
+      console.log(updatedItems);
+      setKnowledgeData(updatedItems);
+    }
   };
   return (
-    <div>
-      <div>
-        <Flex style={boxStyle} justify="space-evenly" align="center">
-          <Input
-            style={{ width: 800 }}
-            size="large"
-            placeholder="Intent Name"
-            variant="filled"
-            value={intentName}
-            onChange={handleIntentName}
-          />
-
-          <Button type="primary" onClick={handleSubmit}>
-            Save
-          </Button>
-        </Flex>
-      </div>
-      <Divider orientation="left">Training Phrases</Divider>
-      <div>
-        <p style={{ textAlign: "left" }}>
-          Write user expressions that are inline with this intent.
-        </p>
-        <div style={{ textAlign: "left" }}>
-          <Input
-            placeholder="Add user expression"
-            size="large"
-            value={intentInputValue}
-            style={{ marginTop: 20, marginBottom: 20 }}
-            onChange={(e) => {
-              setIntentInputValue(e.target.value);
-            }}
-            onPressEnter={handleInputEnter}
-          />
-          <List
-            dataSource={intentData}
-            bordered
-            renderItem={(item, index) => (
-              <List.Item key={index}>
-                <Input
-                  style={{ width: "100%" }}
-                  value={intentData[index]}
-                  variant="Borderless"
-                  onChange={(e) => handleIntentChange(e.target.value, index)}
-                />
-                <Button type="text">
-                  <DeleteFilled />
-                </Button>
-              </List.Item>
-            )}
-          />
+    <>
+      {isLoading ? (
+        <div className="loading-icon">
+          <LoadingOutlined />
         </div>
-      </div>
-      <Divider orientation="left">Response</Divider>
-      <div>
-        <p style={{ textAlign: "left" }}>
-          Write the corresponding response for this intent.
-        </p>
-        <div style={{ textAlign: "left" }}>
-          <Input
-            placeholder="Add response variety"
-            size="large"
-            value={knowledgeValue}
-            style={{ marginTop: 20, marginBottom: 20 }}
-            onChange={(e) => {
-              setKnowledgeValue(e.target.value);
-            }}
-            onPressEnter={handleKnowledgeEnter}
-          />
-          <List
-            dataSource={knowledgeData}
-            bordered
-            renderItem={(item, index) => (
-              <List.Item key={index}>
-                <Input
-                  style={{ width: "100%" }}
-                  value={knowledgeData[index]}
-                  variant="Borderless"
-                  onChange={(e) => handleKnowledgeChange(e.target.value, index)}
-                />
-                <Button type="text">
-                  <DeleteFilled />
-                </Button>
-              </List.Item>
-            )}
-          />
+      ) : (
+        <div>
+          <div>
+            <Flex style={boxStyle} justify="space-evenly" align="center">
+              <Input
+                style={{ width: 800 }}
+                size="large"
+                placeholder="Intent Name"
+                variant="filled"
+                value={intentName}
+                onChange={handleIntentName}
+              />
+              <Button type="primary" onClick={handleSubmit}>
+                Save
+              </Button>
+            </Flex>
+          </div>
+          <Divider orientation="left">Training Phrases</Divider>
+          <div>
+            <p style={{ textAlign: "left" }}>
+              Write user expressions that are inline with this intent.
+            </p>
+            <div style={{ textAlign: "left" }}>
+              <Input
+                placeholder="Add user expression"
+                size="large"
+                value={intentInput}
+                style={{ marginTop: 20, marginBottom: 20 }}
+                onChange={(e) => {
+                  setIntentInput(e.target.value);
+                }}
+                onPressEnter={() => handleEnter("phrase")}
+              />
+              <List
+                dataSource={intentData}
+                bordered
+                renderItem={(item, index) => (
+                  <List.Item key={index}>
+                    <Input
+                      style={{ width: "100%" }}
+                      value={intentData[index]}
+                      variant="Borderless"
+                      onChange={(e) =>
+                        handleChange(e.target.value, index, "phrase")
+                      }
+                    />
+                    <Button
+                      type="text"
+                      onClick={() => handleDelete(index, "phrase")}
+                    >
+                      <DeleteFilled />
+                    </Button>
+                  </List.Item>
+                )}
+              />
+            </div>
+          </div>
+          <Divider orientation="left">Response</Divider>
+          <div>
+            <p style={{ textAlign: "left" }}>
+              Write the corresponding response for this intent.
+            </p>
+            <div style={{ textAlign: "left" }}>
+              <Input
+                placeholder="Add response variety"
+                size="large"
+                value={knowledgeInput}
+                style={{ marginTop: 20, marginBottom: 20 }}
+                onChange={(e) => {
+                  setKnowledgeInput(e.target.value);
+                }}
+                onPressEnter={() => handleEnter("knowledge")}
+              />
+              <List
+                dataSource={knowledgeData}
+                bordered
+                renderItem={(item, index) => (
+                  <List.Item key={index}>
+                    <Input
+                      style={{ width: "100%" }}
+                      value={knowledgeData[index]}
+                      variant="Borderless"
+                      onChange={(e) =>
+                        handleChange(e.target.value, index, "knowledge")
+                      }
+                    />
+                    <Button
+                      type="text"
+                      onClick={() => handleDelete(index, "knowledge")}
+                    >
+                      <DeleteFilled />
+                    </Button>
+                  </List.Item>
+                )}
+              />
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 
