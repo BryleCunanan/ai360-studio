@@ -19,7 +19,7 @@ const RootLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(null);
-  const [username, setUsername] = useState();
+  const [username, setUsername] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const {
@@ -30,9 +30,8 @@ const RootLayout = () => {
     axios.defaults.headers.common["Authorization"] =
       localStorage.getItem("token");
 
-    setUsername(localStorage.getItem("username"));
-
     if (axios.defaults.headers.common["Authorization"]) {
+      setUsername(localStorage.getItem("username"));
       console.log("Logged in");
       setIsLoggedIn(true);
     } else {
@@ -53,6 +52,13 @@ const RootLayout = () => {
 
   const handleCancel = () => {
     setModalOpen(false);
+  };
+
+  const handleModalClose = () => {
+    // setUsername(localStorage.getItem("username"));
+
+    // console.log("Local: ", localStorage.getItem("username"));
+    console.log("State: ", username);
   };
 
   return (
@@ -108,7 +114,11 @@ const RootLayout = () => {
                 icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
               />
               {isLoggedIn ? (
-                <div style={{ marginRight: 20 }}>Hello, {username}</div>
+                username ? (
+                  <div style={{ marginRight: 20 }}>Hello, {username}</div>
+                ) : (
+                  <LoadingOutlined style={{ marginRight: 20 }} />
+                )
               ) : (
                 <Button
                   style={{ marginRight: 20 }}
@@ -128,6 +138,8 @@ const RootLayout = () => {
                 preserve={false}
                 destroyOnClose
                 onCancel={handleCancel}
+                afterClose={handleModalClose}
+                setUsername={setUsername}
               >
                 <LoginForm
                   handleModalUpdate={setModalOpen}
