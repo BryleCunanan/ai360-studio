@@ -15,7 +15,10 @@ const CreateIntent = () => {
   const [intentExamples, setIntentExamples] = useState([]);
   const [intentName, setIntentName] = useState();
   const [intentData, setIntentData] = useState([]);
-  const [inputValue, setInputValue] = useState("");
+  const [intentInputValue, setIntentInputValue] = useState("");
+  const [knowledgeValue, setKnowledgeValue] = useState("");
+  const [knowledgeData, setKnowledgeData] = useState([]);
+  const [knowledgeID, setKnowledgeID] = useState(null);
 
   if (location.pathname != "/intents/new") {
     useEffect(() => {
@@ -29,47 +32,101 @@ const CreateIntent = () => {
         .catch((error) => {
           console.log(error);
         });
+
+      axios
+        .get(import.meta.env.APP_SERVER_URL + "/knowledge/" + id)
+        .then((response) => {
+          setKnowledgeData(response.data.knowledge);
+          setKnowledgeID(response.data._id);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }, []);
   }
 
   const handleSubmit = () => {
-    const values = {
+    const intentValues = {
       intentName,
       intentExamples,
       followUp: false,
     };
-    console.log(values);
 
-    // axios
-    //   .post("http://172.17.21.48:3000/intent", values)
-    //   .then((result) => {
-    //     console.log(result);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
+    const knowledgeValues = {
+      knowledge: knowledgeData,
+    };
+    console.log(knowledgeValues);
+
+    if (location.pathname == "/intents/new") {
+      axios
+        .post(import.meta.env.APP_SERVER_URL + "/intent", intentValues)
+        .then((result) => {
+          console.log(result);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      // console.log(import.meta.env.APP_SERVER_URL + "/intent/" + id);
+      // axios
+      //   .post(import.meta.env.APP_SERVER_URL + "/intent/" + id, intentValues)
+      //   .then((result) => {
+      //     console.log(result.data);
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   });
+
+      axios
+        .post(
+          import.meta.env.APP_SERVER_URL + "/knowledge/" + knowledgeID,
+          knowledgeValues
+        )
+        .then((result) => {
+          console.log(result);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   };
 
   const handleIntentName = () => {
     setIntentName(event.target.value);
   };
 
-  const handlePressEnter = () => {
-    console.log("Entered Function: ", inputValue);
-    if (inputValue.trim() !== "") {
-      const newItem = inputValue.trim();
+  const handleInputEnter = () => {
+    console.log("Entered Input: ", intentInputValue);
+    if (intentInputValue.trim() !== "") {
+      const newItem = intentInputValue.trim();
       const newIntentData = [...intentData, newItem];
       setIntentData(newIntentData);
       setIntentExamples(newIntentData);
-      setInputValue("");
+      setIntentInputValue("");
     }
   };
 
-  const handlePhraseChange = (value, index) => {
+  const handleKnowledgeEnter = () => {
+    console.log("Entered Knowledge: ", knowledgeValue);
+    if (knowledgeValue.trim() !== "") {
+      const newItem = knowledgeValue.trim();
+      const newKnowledge = [...knowledgeData, newItem];
+      setKnowledgeData(newKnowledge);
+      setIntentExamples(newKnowledge);
+      setKnowledgeValue("");
+    }
+  };
+
+  const handleIntentChange = (value, index) => {
     const newIntent = [...intentData];
     newIntent[index] = value;
     setIntentData(newIntent);
     setIntentExamples(newIntent);
+  };
+  const handleKnowledgeChange = (value, index) => {
+    const newKnowldge = [...knowledgeData];
+    newKnowldge[index] = value;
+    setKnowledgeData(newKnowldge);
   };
   return (
     <div>
@@ -98,12 +155,12 @@ const CreateIntent = () => {
           <Input
             placeholder="Add user expression"
             size="large"
-            value={inputValue}
+            value={intentInputValue}
             style={{ marginTop: 20, marginBottom: 20 }}
             onChange={(e) => {
-              setInputValue(e.target.value);
+              setIntentInputValue(e.target.value);
             }}
-            onPressEnter={handlePressEnter}
+            onPressEnter={handleInputEnter}
           />
           <List
             dataSource={intentData}
@@ -114,7 +171,42 @@ const CreateIntent = () => {
                   style={{ width: "100%" }}
                   value={intentData[index]}
                   variant="Borderless"
-                  onChange={(e) => handlePhraseChange(e.target.value, index)}
+                  onChange={(e) => handleIntentChange(e.target.value, index)}
+                />
+                <Button type="text">
+                  <DeleteFilled />
+                </Button>
+              </List.Item>
+            )}
+          />
+        </div>
+      </div>
+      <Divider orientation="left">Response</Divider>
+      <div>
+        <p style={{ textAlign: "left" }}>
+          Write the corresponding response for this intent.
+        </p>
+        <div style={{ textAlign: "left" }}>
+          <Input
+            placeholder="Add response variety"
+            size="large"
+            value={knowledgeValue}
+            style={{ marginTop: 20, marginBottom: 20 }}
+            onChange={(e) => {
+              setKnowledgeValue(e.target.value);
+            }}
+            onPressEnter={handleKnowledgeEnter}
+          />
+          <List
+            dataSource={knowledgeData}
+            bordered
+            renderItem={(item, index) => (
+              <List.Item key={index}>
+                <Input
+                  style={{ width: "100%" }}
+                  value={knowledgeData[index]}
+                  variant="Borderless"
+                  onChange={(e) => handleKnowledgeChange(e.target.value, index)}
                 />
                 <Button type="text">
                   <DeleteFilled />
