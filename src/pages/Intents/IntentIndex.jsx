@@ -140,6 +140,11 @@ const IntentIndex = () => {
           <Divider orientation="left">Intents</Divider>
           <div>
             <List
+              pagination={{
+                position: "bottom",
+                align: "center",
+                pageSize: 8,
+              }}
               style={{ textAlign: "left" }}
               itemLayout="horizontal"
               dataSource={filteredItems}

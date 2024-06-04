@@ -54,35 +54,41 @@ const CreateIntent = () => {
   }, [id, location.pathname]);
 
   const handleSubmit = () => {
-    const intentValues = {
-      intentName,
-      intentExamples: intentData,
-      followUp: false,
-    };
-
-    const knowledgeValues = {
-      intentNameId: id,
-      knowledge: knowledgeData,
-    };
-
-    console.log(knowledgeValues);
-
     if (location.pathname === "/intents/new") {
       axios
-        .post(import.meta.env.APP_SERVER_URL + "/intent", intentValues)
+        .post(import.meta.env.APP_SERVER_URL + "/intent", {
+          intentName,
+          intentExamples: intentData,
+          followUp: false,
+        })
         .then((result) => {
-          console.log(result);
+          console.log("Intent: ", result);
+          const intentId = result.data;
+
+          axios
+            .post(import.meta.env.APP_SERVER_URL + "/knowledge", {
+              intentNameId: intentId,
+              knowledge: knowledgeData,
+            })
+            .then((result) => {
+              axios
+                .post(import.meta.env.APP_SERVER_URL + "/story", {
+                  intentName,
+                  intentId: [intentId],
+                })
+                .then((result) => {
+                  console.log("Stories: ", result);
+                })
+                .catch((error) => {
+                  console.log("Stories: ", error);
+                });
+            })
+            .catch((error) => {
+              console.log("Knowledge: ", error);
+            });
         })
         .catch((error) => {
-          console.log(error);
-        });
-      axios
-        .post(import.meta.env.APP_SERVER_URL + "/knowledge", knowledgeValues)
-        .then((result) => {
-          console.log(result);
-        })
-        .catch((error) => {
-          console.log(error);
+          console.log("Intent: ", error);
         });
     } else {
       console.log(import.meta.env.APP_SERVER_URL + "/intent/" + id);
