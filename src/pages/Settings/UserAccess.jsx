@@ -72,7 +72,7 @@ const UserAccess = () => {
           <Table
             dataSource={items.map((item) => ({ ...item, key: item._id }))}
             columns={columns}
-            pagination={false}
+            pagination={{ pageSize: 11, hideOnSinglePage: true }}
             onRow={(record, rowIndex) => {
               return {
                 onClick: () => {

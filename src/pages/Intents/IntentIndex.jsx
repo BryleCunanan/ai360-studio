@@ -38,6 +38,7 @@ const IntentIndex = () => {
     if (!parentIntent.followUps) {
       parentIntent.followUps = [];
     }
+    console.log("newFollowUp: ", newFollowUp.name);
     parentIntent.followUps.push(newFollowUp);
     setItems(updatedItems);
     setFilteredItems(updatedItems);
@@ -143,7 +144,7 @@ const IntentIndex = () => {
               pagination={{
                 position: "bottom",
                 align: "center",
-                pageSize: 8,
+                pageSize: 6,
               }}
               style={{ textAlign: "left" }}
               itemLayout="horizontal"
