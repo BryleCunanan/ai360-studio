@@ -1,7 +1,7 @@
 import { Divider, Input, List, Button, Flex, message } from "antd";
 import { NavLink } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
-import { DeleteFilled, UndoOutlined } from "@ant-design/icons";
+import { DeleteFilled, UndoOutlined, LoadingOutlined } from "@ant-design/icons";
 import axios from "axios";
 
 const { Search } = Input;
@@ -10,6 +10,7 @@ const IntentIndex = () => {
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [hiddenItems, setHiddenItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const confirmDeleteRef = useRef(true);
 
   useEffect(() => {
@@ -21,6 +22,9 @@ const IntentIndex = () => {
       })
       .catch((error) => {
         console.log(error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, []);
 
@@ -111,79 +115,91 @@ const IntentIndex = () => {
 
   return (
     <>
-      <Flex style={{ width: "100%" }} justify="space-evenly" align="center">
-        <Search
-          placeholder="Search Intents"
-          allowClear
-          onChange={onSearch}
-          style={{ width: "100%", maxWidth: 800 }}
-          size="large"
-        />
-        <NavLink to="new">
-          <Button type="primary">Create Intent</Button>
-        </NavLink>
-      </Flex>
-      <Divider orientation="left">Intents</Divider>
-      <div>
-        <List
-          style={{ textAlign: "left" }}
-          itemLayout="horizontal"
-          dataSource={filteredItems}
-          renderItem={(item, index) =>
-            !hiddenItems[index] && (
-              <div key={item._id}>
-                <List.Item
-                  style={{}}
-                  className="intent-item"
-                  actions={[
-                    <Button
-                      className="follow-up-btn"
-                      type="text"
-                      onClick={() => handleAddFollowUp(index)}
-                    >
-                      Add Follow-up Intent
-                    </Button>,
-                    <Button
-                      className="delete-btn"
-                      type="text"
-                      onClick={() => handleDeleteIntent(index)}
-                    >
-                      <DeleteFilled />
-                    </Button>,
-                  ]}
-                  key={item._id}
-                >
-                  <NavLink to={item._id}>{item.intentName}</NavLink>
-                </List.Item>
-                <List
-                  style={{
-                    paddingLeft:
-                      (item.followUps?.length ?? 0) > 0 ? "20px" : "0",
-                  }}
-                  locale={{ emptyText: " " }}
-                  dataSource={item.followUps ?? []}
-                  renderItem={(followUp, followUpIndex) => (
+      {isLoading ? (
+        <div className="loading-icon">
+          <LoadingOutlined
+            style={{
+              fontSize: 50,
+            }}
+          />
+        </div>
+      ) : (
+        <>
+          <Flex style={{ width: "100%" }} justify="space-evenly" align="center">
+            <Search
+              placeholder="Search Intents"
+              allowClear
+              onChange={onSearch}
+              style={{ width: "100%", maxWidth: 800 }}
+              size="large"
+            />
+            <NavLink to="new">
+              <Button type="primary">Create Intent</Button>
+            </NavLink>
+          </Flex>
+          <Divider orientation="left">Intents</Divider>
+          <div>
+            <List
+              style={{ textAlign: "left" }}
+              itemLayout="horizontal"
+              dataSource={filteredItems}
+              renderItem={(item, index) =>
+                !hiddenItems[index] && (
+                  <div key={item._id}>
                     <List.Item
+                      style={{}}
+                      className="intent-item"
                       actions={[
+                        <Button
+                          className="follow-up-btn"
+                          type="text"
+                          onClick={() => handleAddFollowUp(index)}
+                        >
+                          Add Follow-up Intent
+                        </Button>,
                         <Button
                           className="delete-btn"
                           type="text"
-                          onClick={() =>
-                            handleDeleteFollowUp(index, followUpIndex)
-                          }
-                          icon={<DeleteFilled />}
-                        />,
+                          onClick={() => handleDeleteIntent(index)}
+                        >
+                          <DeleteFilled />
+                        </Button>,
                       ]}
+                      key={item._id}
                     >
-                      <NavLink to={followUp._id}>{followUp.name}</NavLink>
+                      <NavLink to={item._id}>{item.intentName}</NavLink>
                     </List.Item>
-                  )}
-                />
-              </div>
-            )
-          }
-        />
-      </div>
+                    <List
+                      style={{
+                        paddingLeft:
+                          (item.followUps?.length ?? 0) > 0 ? "20px" : "0",
+                      }}
+                      locale={{ emptyText: " " }}
+                      dataSource={item.followUps ?? []}
+                      renderItem={(followUp, followUpIndex) => (
+                        <List.Item
+                          actions={[
+                            <Button
+                              className="delete-btn"
+                              type="text"
+                              onClick={() =>
+                                handleDeleteFollowUp(index, followUpIndex)
+                              }
+                              icon={<DeleteFilled />}
+                            />,
+                          ]}
+                        >
+                          <NavLink to={followUp._id}>{followUp.name}</NavLink>
+                        </List.Item>
+                      )}
+                    />
+                  </div>
+                )
+              }
+            />
+          </div>
+        </>
+      )}
     </>
   );
 };

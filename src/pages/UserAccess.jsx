@@ -1,4 +1,5 @@
 import { Table, Drawer, Button, Flex } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import UserForm from "../components/UserForm";
 import axios from "axios";
@@ -26,6 +27,7 @@ const UserAccess = () => {
   const [userData, setUserData] = useState([]);
   const [items, setItems] = useState([]);
   const [isNewUser, setIsNewUser] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     axios
@@ -36,57 +38,72 @@ const UserAccess = () => {
       })
       .catch((error) => {
         console.log(error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, [drawerOpen]);
 
   return (
     <>
-      <Flex vertical={true} align="self-end" style={{ marginBottom: 20 }}>
-        <Button
-          type="primary"
-          style={{ width: 100 }}
-          onClick={() => {
-            setUserData({});
-            setIsNewUser(true);
-            setDrawerOpen(true);
-          }}
-        >
-          Add User
-        </Button>
-      </Flex>
-
-      <Table
-        dataSource={items.map((item) => ({ ...item, key: item._id }))}
-        columns={columns}
-        pagination={false}
-        onRow={(record, rowIndex) => {
-          return {
-            onClick: () => {
-              setUserData(items[rowIndex]);
-              setDrawerOpen(true);
-            },
-          };
-        }}
-      />
-      <Drawer
-        title="User Information"
-        className="user-drawer"
-        open={drawerOpen}
-        width="600px"
-        maskClosable={false}
-        footer={null}
-        onClose={() => {
-          setIsNewUser(false);
-          setDrawerOpen(false);
-        }}
-        destroyOnClose
-      >
-        <UserForm
-          data={userData}
-          handleDrawerOpen={setDrawerOpen}
-          isNewUser={isNewUser}
-        />
-      </Drawer>
+      {isLoading ? (
+        <div className="loading-icon">
+          <LoadingOutlined
+            style={{
+              fontSize: 50,
+            }}
+          />
+        </div>
+      ) : (
+        <>
+          {" "}
+          <Flex vertical={true} align="self-end" style={{ marginBottom: 20 }}>
+            <Button
+              type="primary"
+              style={{ width: 100 }}
+              onClick={() => {
+                setUserData({});
+                setIsNewUser(true);
+                setDrawerOpen(true);
+              }}
+            >
+              Add User
+            </Button>
+          </Flex>
+          <Table
+            dataSource={items.map((item) => ({ ...item, key: item._id }))}
+            columns={columns}
+            pagination={false}
+            onRow={(record, rowIndex) => {
+              return {
+                onClick: () => {
+                  setUserData(items[rowIndex]);
+                  setDrawerOpen(true);
+                },
+              };
+            }}
+          />
+          <Drawer
+            title="User Information"
+            className="user-drawer"
+            open={drawerOpen}
+            width="600px"
+            maskClosable={false}
+            footer={null}
+            onClose={() => {
+              setIsNewUser(false);
+              setDrawerOpen(false);
+            }}
+            destroyOnClose
+          >
+            <UserForm
+              data={userData}
+              handleDrawerOpen={setDrawerOpen}
+              isNewUser={isNewUser}
+            />
+          </Drawer>
+        </>
+      )}
     </>
   );
 };

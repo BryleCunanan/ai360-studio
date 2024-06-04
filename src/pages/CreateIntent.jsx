@@ -31,6 +31,9 @@ const CreateIntent = () => {
         })
         .catch((error) => {
           console.error(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
 
       axios
@@ -41,9 +44,13 @@ const CreateIntent = () => {
         })
         .catch((error) => {
           console.error(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
+    } else {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }, [id, location.pathname]);
 
   const handleSubmit = () => {
@@ -154,7 +161,11 @@ const CreateIntent = () => {
     <>
       {isLoading ? (
         <div className="loading-icon">
-          <LoadingOutlined />
+          <LoadingOutlined
+            style={{
+              fontSize: 50,
+            }}
+          />
         </div>
       ) : (
         <div>
