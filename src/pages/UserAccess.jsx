@@ -25,12 +25,14 @@ const UserAccess = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [userData, setUserData] = useState([]);
   const [items, setItems] = useState([]);
+  const [isNewUser, setIsNewUser] = useState(false);
 
   useEffect(() => {
     axios
       .get(import.meta.env.APP_SERVER_URL + "/user")
       .then((response) => {
         setItems(response.data);
+        console.log("Users: ", response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -45,6 +47,7 @@ const UserAccess = () => {
           style={{ width: 100 }}
           onClick={() => {
             setUserData({});
+            setIsNewUser(true);
             setDrawerOpen(true);
           }}
         >
@@ -72,10 +75,17 @@ const UserAccess = () => {
         width="600px"
         maskClosable={false}
         footer={null}
-        onClose={() => setDrawerOpen(false)}
+        onClose={() => {
+          setIsNewUser(false);
+          setDrawerOpen(false);
+        }}
         destroyOnClose
       >
-        <UserForm data={userData} handleDrawerOpen={setDrawerOpen} />
+        <UserForm
+          data={userData}
+          handleDrawerOpen={setDrawerOpen}
+          isNewUser={isNewUser}
+        />
       </Drawer>
     </>
   );

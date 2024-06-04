@@ -54,13 +54,6 @@ const RootLayout = () => {
     setModalOpen(false);
   };
 
-  const handleModalClose = () => {
-    // setUsername(localStorage.getItem("username"));
-
-    // console.log("Local: ", localStorage.getItem("username"));
-    console.log("State: ", username);
-  };
-
   return (
     <>
       {loading ? (
@@ -138,8 +131,6 @@ const RootLayout = () => {
                 preserve={false}
                 destroyOnClose
                 onCancel={handleCancel}
-                afterClose={handleModalClose}
-                setUsername={setUsername}
               >
                 <LoginForm
                   handleModalUpdate={setModalOpen}

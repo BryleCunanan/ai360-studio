@@ -1,7 +1,10 @@
 import { Button, Select, Form, Input } from "antd";
 import axios from "axios";
 
-const UserForm = ({ data, handleDrawerOpen }) => {
+const UserForm = ({ data, handleDrawerOpen, isNewUser }) => {
+  console.log("New User? ", isNewUser);
+  console.log("id: ", data._id);
+
   const items = [
     {
       label: "Viewer",
@@ -13,15 +16,27 @@ const UserForm = ({ data, handleDrawerOpen }) => {
   ];
 
   const onFinish = (value) => {
-    axios
-      .post(import.meta.env.APP_SERVER_URL + "/user", value)
-      .then((result) => {
-        console.log(result);
-        handleDrawerOpen(false);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    if (isNewUser) {
+      axios
+        .post(import.meta.env.APP_SERVER_URL + "/user", value)
+        .then((result) => {
+          console.log(result);
+          handleDrawerOpen(false);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      axios
+        .post(import.meta.env.APP_SERVER_URL + "/user/" + data._id, value)
+        .then((result) => {
+          console.log(result);
+          handleDrawerOpen(false);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   };
 
   const onFinishFailed = () => {
