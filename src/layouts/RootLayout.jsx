@@ -98,7 +98,10 @@ const RootLayout = () => {
               />
               {isLoggedIn ? (
                 username ? (
-                  <div style={{ marginRight: 20 }}>Hello, {username}</div>
+                  <div style={{ marginRight: 20 }}>
+                    Hello,{" "}
+                    {username.charAt(0).toUpperCase() + username.slice(1)}
+                  </div>
                 ) : (
                   <LoadingOutlined style={{ marginRight: 20 }} />
                 )

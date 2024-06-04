@@ -34,7 +34,6 @@ const UserAccess = () => {
       .get(import.meta.env.APP_SERVER_URL + "/user")
       .then((response) => {
         setItems(response.data);
-        console.log("Users: ", response.data);
       })
       .catch((error) => {
         console.log(error);
