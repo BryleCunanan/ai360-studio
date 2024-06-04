@@ -73,9 +73,9 @@ const IntentIndex = () => {
       duration: 5,
       onClose: () => {
         if (confirmDeleteRef.current) {
-          console.log("Deleting... ");
+          console.log("Deleting... ", items[index]._id);
           axios
-            .post(import.meta.env.APP_SERVER_URL + "/story/delete", [
+            .delete(import.meta.env.APP_SERVER_URL + "/story/delete", [
               items[index]._id,
             ])
             .then((result) => {

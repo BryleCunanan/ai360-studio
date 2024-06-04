@@ -4,18 +4,18 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
-import Home from "./pages/Home";
-import Intent from "./pages/Intent";
-import Entities from "./pages/Entities";
-import Knowledge from "./pages/Knowledge";
-import CreateIntent from "./pages/CreateIntent";
-import EntityDummy from "./pages/EntityDummy";
-import Settings from "./pages/Settings";
+import Home from "./pages/Home/Home";
+import Intent from "./pages/Intents/Intent";
+import Entities from "./pages/Entities/Entities";
+import Knowledge from "./pages/Knowledge/Knowledge";
+import CreateIntent from "./pages/Intents/CreateIntent";
+import EntityDummy from "./pages/Entities/EntityDummy";
+import Settings from "./pages/Settings/Settings";
 import RootLayout from "./layouts/RootLayout";
-import IntentIndex from "./pages/IntentIndex";
-import EntityIndex from "./pages/EntityIndex";
-import UserAccess from "./pages/UserAccess";
-import OtherPage from "./pages/OtherPage";
+import IntentIndex from "./pages/Intents/IntentIndex";
+import EntityIndex from "./pages/Entities/EntityIndex";
+import UserAccess from "./pages/Settings/UserAccess";
+import OtherPage from "./pages/Settings/OtherPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
