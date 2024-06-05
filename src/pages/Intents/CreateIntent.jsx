@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 
 const boxStyle = {
   width: "100%",
-  height: 120,
+  height: 50,
   marginTop: 15,
 };
 
