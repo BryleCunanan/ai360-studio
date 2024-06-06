@@ -11,17 +11,39 @@ const IntentIndex = () => {
   const [filteredItems, setFilteredItems] = useState([]);
   const [hiddenItems, setHiddenItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [followUpItems, setFollowUpItems] = useState([]);
   const confirmDeleteRef = useRef(true);
 
   useEffect(() => {
+    //Get data from database
+    //   [
+    //     {
+    //         "_id": "66613994d67a49d2e42e6c35",
+    //         "story_name": "parking_6pGz0",
+    //         "parentIntentId": "6653ea8d163616451561a219",
+    //         "parentIntentName": "parking ng lolo mo",
+    //         "followUpIntents": [
+    //             {
+    //                 "intentName": "parking - custom",
+    //                 "intentId": "6661008736deb653ac63e512"
+    //             },
+    //             {
+    //                 "intentName": "nails_- custom",
+    //                 "intentId": "66610cc53b1d176c293e02e2"
+    //             }
+    //         ]
+    //     }
+    // ]
     axios
-      .get(import.meta.env.APP_SERVER_URL + "/intent")
+      .get(import.meta.env.APP_SERVER_URL + "/story")
       .then((response) => {
-        setItems(response.data);
-        setFilteredItems(response.data);
+        const data = response.data;
+        console.log("List of Intents: ", data);
+        setItems(data);
+        setFilteredItems(data);
       })
       .catch((error) => {
-        console.log(error);
+        console.log("List of Intents:", error);
       })
       .finally(() => {
         setIsLoading(false);
@@ -31,15 +53,51 @@ const IntentIndex = () => {
   const handleAddFollowUp = (index) => {
     const updatedItems = [...items];
     const parentIntent = updatedItems[index];
+    newFollowUp = parentIntent.intentName + " - custom";
+    axios
+      .post(import.meta.env.APP_SERVER_URL + "/intent", {
+        intentName: newFollowUp,
+        intentExamples: [],
+        followUp: true,
+      })
+      .then((intentId) => {
+        console.log("Add Follow up: ", intentId.data);
+        axios
+          .post(import.meta.env.APP_SERVER_URL + "/knowledge", {
+            intentId: intentId.data,
+            knowledge: [],
+          })
+          .then((knowledgeId) => {
+            console.log("Knowledge: ", knowledgeId);
+            axios
+              .post(import.meta.env.APP_SERVER_URL + "/story", {
+                intentName: newFollowUp,
+                intentId: intentId.data,
+              })
+              .then((result) => {
+                console.log("Stories: ", result);
+              })
+              .catch((error) => {
+                console.log("Stories: ", error);
+              });
+          })
+          .catch((error) => {
+            console.log("Knowledge: ", error);
+          });
+      })
+      .catch((error) => {
+        console.log("Add Follow-up: ", error);
+      });
+
     const newFollowUp = {
       ...parentIntent,
-      name: `${parentIntent.intentName} - custom`,
+      intentName: `${parentIntent.parentIntentName} - custom`,
     };
-    if (!parentIntent.followUps) {
-      parentIntent.followUps = [];
+    if (!parentIntent.followUpIntents) {
+      parentIntent.followUpIntents = [];
     }
-    console.log("newFollowUp: ", newFollowUp.name);
-    parentIntent.followUps.push(newFollowUp);
+    console.log("newFollowUp: ", newFollowUp.intentName);
+    parentIntent.followUpIntents.push(newFollowUp);
     setItems(updatedItems);
     setFilteredItems(updatedItems);
   };
@@ -106,6 +164,7 @@ const IntentIndex = () => {
       axios
         .get(import.meta.env.APP_SERVER_URL + "/intent/search/" + value)
         .then((response) => {
+          console.log("Search: ", response.data);
           setFilteredItems(response.data);
         })
         .catch((error) => {
@@ -138,7 +197,7 @@ const IntentIndex = () => {
               <Button type="primary">Create Intent</Button>
             </NavLink>
           </Flex>
-          <Divider orientation="left">Intents</Divider>
+          <Divider orientation="left">Intents</Divider> {/* LIST OF INTENTS */}
           <div>
             <List
               pagination={{
@@ -151,9 +210,8 @@ const IntentIndex = () => {
               dataSource={filteredItems}
               renderItem={(item, index) =>
                 !hiddenItems[index] && (
-                  <div key={item._id}>
+                  <div key={item.parentIntentName}>
                     <List.Item
-                      style={{}}
                       className="intent-item"
                       actions={[
                         <Button
@@ -171,17 +229,18 @@ const IntentIndex = () => {
                           <DeleteFilled />
                         </Button>,
                       ]}
-                      key={item._id}
+                      key={item.parentIntentName}
                     >
-                      <NavLink to={item._id}>{item.intentName}</NavLink>
+                      <NavLink to={item.parentIntentId}>
+                        {item.parentIntentName}
+                      </NavLink>
                     </List.Item>
                     <List
                       style={{
-                        paddingLeft:
-                          (item.followUps?.length ?? 0) > 0 ? "20px" : "0",
+                        paddingLeft: 20,
                       }}
-                      locale={{ emptyText: " " }}
-                      dataSource={item.followUps ?? []}
+                      locale={{ emptyText: " No intents" }}
+                      dataSource={item.followUpIntents}
                       renderItem={(followUp, followUpIndex) => (
                         <List.Item
                           actions={[
@@ -195,7 +254,9 @@ const IntentIndex = () => {
                             />,
                           ]}
                         >
-                          <NavLink to={followUp._id}>{followUp.name}</NavLink>
+                          <NavLink to={followUp.intentId}>
+                            {followUp.intentName}
+                          </NavLink>
                         </List.Item>
                       )}
                     />

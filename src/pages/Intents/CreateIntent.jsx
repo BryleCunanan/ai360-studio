@@ -18,7 +18,7 @@ const CreateIntent = () => {
   const [intentInput, setIntentInput] = useState("");
   const [knowledgeInput, setKnowledgeInput] = useState("");
   const [knowledgeData, setKnowledgeData] = useState([]);
-  const [knowledgeID, setKnowledgeID] = useState(null);
+  const [knowledgeID, setKnowledgeID] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -26,21 +26,25 @@ const CreateIntent = () => {
       axios
         .get(`${import.meta.env.APP_SERVER_URL}/intent/${id}`)
         .then((response) => {
+          console.log(response.data);
           setIntentData(response.data.intentExamples);
           setIntentName(response.data.intentName);
-        })
-        .catch((error) => {
-          console.error(error);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
 
-      axios
-        .get(`${import.meta.env.APP_SERVER_URL}/knowledge/${id}`)
-        .then((response) => {
-          setKnowledgeData(response.data.knowledge);
-          setKnowledgeID(response.data._id);
+          axios
+            .get(
+              `${import.meta.env.APP_SERVER_URL}/knowledge/${response.data._id}`
+            )
+            .then((response) => {
+              console.log(response.data);
+              setKnowledgeData(response.data.knowledge);
+              setKnowledgeID(response.data._id);
+            })
+            .catch((error) => {
+              console.error(error);
+            })
+            .finally(() => {
+              setIsLoading(false);
+            });
         })
         .catch((error) => {
           console.error(error);
@@ -71,6 +75,7 @@ const CreateIntent = () => {
               knowledge: knowledgeData,
             })
             .then((result) => {
+              console.log("Knowledge: ", result);
               axios
                 .post(import.meta.env.APP_SERVER_URL + "/story", {
                   intentName,
@@ -93,7 +98,10 @@ const CreateIntent = () => {
     } else {
       console.log(import.meta.env.APP_SERVER_URL + "/intent/" + id);
       axios
-        .post(import.meta.env.APP_SERVER_URL + "/intent/" + id, intentValues)
+        .post(import.meta.env.APP_SERVER_URL + "/intent/" + id, {
+          intentName,
+          intentExamples: intentData,
+        })
         .then((result) => {
           console.log(result.data);
         })
@@ -101,10 +109,9 @@ const CreateIntent = () => {
           console.log(error);
         });
       axios
-        .post(
-          import.meta.env.APP_SERVER_URL + "/knowledge/" + knowledgeID,
-          knowledgeValues
-        )
+        .post(import.meta.env.APP_SERVER_URL + "/knowledge/" + knowledgeID, {
+          knowledge: knowledgeData,
+        })
         .then((result) => {
           console.log(result);
         })
