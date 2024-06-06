@@ -5,6 +5,7 @@ import {
   ForkOutlined,
   BookOutlined,
   HomeOutlined,
+  ApiOutlined,
 } from "@ant-design/icons";
 import { NavLink, useLocation } from "react-router-dom";
 import { useEffect } from "react";
@@ -29,6 +30,11 @@ const MenuList = ({ darkTheme, isLoggedIn }) => {
       label: "Knowledge",
       icon: <BookOutlined />,
       key: "/knowledge",
+    },
+    {
+      label: "Testing",
+      icon: <ApiOutlined />,
+      key: "/test",
     },
     {
       label: "Settings",

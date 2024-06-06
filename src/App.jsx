@@ -16,6 +16,17 @@ import IntentIndex from "./pages/Intents/IntentIndex";
 import EntityIndex from "./pages/Entities/EntityIndex";
 import UserAccess from "./pages/Settings/UserAccess";
 import OtherPage from "./pages/Settings/OtherPage";
+import Testing from "./pages/Testing/Testing";
+import TestGround from "./pages/Testing/TestGround";
+
+const requireAuth = (nextState, replace) => {
+  if (!isLoggedIn) {
+    replace({
+      pathname: "/home",
+      state: { nextPathname: nextState.location.pathname },
+    });
+  }
+};
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -30,6 +41,9 @@ const router = createBrowserRouter(
         <Route path="entitydummy" element={<EntityDummy />} />
       </Route>
       <Route path="knowledge" element={<Knowledge />} />
+      <Route path="test" element={<Testing />}>
+        <Route index element={<TestGround />} />
+      </Route>
       <Route path="settings" element={<Settings />}>
         <Route path="users" element={<UserAccess />} />
         <Route path="others" element={<OtherPage />} />
