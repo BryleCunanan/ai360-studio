@@ -13,6 +13,7 @@ const IntentIndex = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [followUpItems, setFollowUpItems] = useState([]);
   const confirmDeleteRef = useRef(true);
+  const [isRefresh, setIsRefresh] = useState(false);
 
   useEffect(() => {
     //Get data from database
@@ -47,13 +48,16 @@ const IntentIndex = () => {
       })
       .finally(() => {
         setIsLoading(false);
+        setIsRefresh(false);
       });
-  }, []);
+  }, [isRefresh]);
 
   const handleAddFollowUp = (index) => {
     const updatedItems = [...items];
     const parentIntent = updatedItems[index];
-    newFollowUp = parentIntent.intentName + " - custom";
+    const newFollowUp = parentIntent.parentIntentName + " - custom";
+    console.log("newFollowUp", newFollowUp);
+    const parentStory = parentIntent._id;
     axios
       .post(import.meta.env.APP_SERVER_URL + "/intent", {
         intentName: newFollowUp,
@@ -61,21 +65,27 @@ const IntentIndex = () => {
         followUp: true,
       })
       .then((intentId) => {
-        console.log("Add Follow up: ", intentId.data);
+        console.log("Add Follow up: ", {
+          intentName: newFollowUp,
+          intentId: [parentIntent.parentIntentId, intentId.data],
+        });
+
         axios
           .post(import.meta.env.APP_SERVER_URL + "/knowledge", {
-            intentId: intentId.data,
+            intentNameId: intentId.data,
             knowledge: [],
           })
           .then((knowledgeId) => {
             console.log("Knowledge: ", knowledgeId);
+
             axios
-              .post(import.meta.env.APP_SERVER_URL + "/story", {
-                intentName: newFollowUp,
-                intentId: intentId.data,
+              .post(import.meta.env.APP_SERVER_URL + "/story/" + parentStory, {
+                parentIntentId: parentIntent.parentIntentId,
+                followUpIntentId: intentId.data,
               })
               .then((result) => {
                 console.log("Stories: ", result);
+                setIsRefresh(true);
               })
               .catch((error) => {
                 console.log("Stories: ", error);
@@ -89,14 +99,9 @@ const IntentIndex = () => {
         console.log("Add Follow-up: ", error);
       });
 
-    const newFollowUp = {
-      ...parentIntent,
-      intentName: `${parentIntent.parentIntentName} - custom`,
-    };
     if (!parentIntent.followUpIntents) {
       parentIntent.followUpIntents = [];
     }
-    console.log("newFollowUp: ", newFollowUp.intentName);
     parentIntent.followUpIntents.push(newFollowUp);
     setItems(updatedItems);
     setFilteredItems(updatedItems);
@@ -161,15 +166,12 @@ const IntentIndex = () => {
     if (value.trim() === "") {
       setFilteredItems(items);
     } else {
-      axios
-        .get(import.meta.env.APP_SERVER_URL + "/intent/search/" + value)
-        .then((response) => {
-          console.log("Search: ", response.data);
-          setFilteredItems(response.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      const filteredItems = items.filter((item) =>
+        item.parentIntentName.toLowerCase().includes(value.toLowerCase())
+      );
+
+      // Update the state with the filtered items
+      setFilteredItems(filteredItems);
     }
   };
 

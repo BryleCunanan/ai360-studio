@@ -16,17 +16,20 @@ const TestGround = () => {
 
   const handleSend = () => {
     console.log(inputValue);
-    axios
-      .post("http://54.254.184.220:5005/webhooks/rest/webhook", {
-        message: inputValue,
-      })
-      .then((response) => {
-        console.log("Message: ", response.data);
-        setBotResponse(response.data);
-      })
-      .then((error) => {
-        console.log(error);
-      });
+    if (inputValue.trim() !== "") {
+      axios
+        .post("http://54.254.184.220:5005/webhooks/rest/webhook", {
+          message: inputValue,
+        })
+        .then((response) => {
+          console.log("Message: ", response.data);
+          setBotResponse(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(setInputValue(""));
+    }
   };
 
   const handleChange = (e) => {
@@ -56,9 +59,9 @@ const TestGround = () => {
             padding: "10px",
             borderRadius: "5px",
             fontFamily: "Courier, NewCourier, monospace",
-            whiteSpace: "pre-wrap" /* Allows wrapping */,
-            wordBreak: "break-all" /* Prevents overflow */,
-            overflowX: "auto" /* Horizontal scroll if needed */,
+            whiteSpace: "pre-wrap",
+            wordBreak: "break-all",
+            overflowX: "auto",
           }}
         >
           {JSON.stringify(botResponse, null, 4)}

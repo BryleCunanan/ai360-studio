@@ -3,7 +3,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import { DeleteFilled } from "@ant-design/icons";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const boxStyle = {
   width: "100%",
@@ -20,6 +20,8 @@ const CreateIntent = () => {
   const [knowledgeData, setKnowledgeData] = useState([]);
   const [knowledgeID, setKnowledgeID] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (location.pathname !== "/intents/new") {
@@ -79,10 +81,11 @@ const CreateIntent = () => {
               axios
                 .post(import.meta.env.APP_SERVER_URL + "/story", {
                   intentName,
-                  intentId: [intentId],
+                  intentId,
                 })
                 .then((result) => {
                   console.log("Stories: ", result);
+                  navigate(`/intents/${intentId}`, { replace: true });
                 })
                 .catch((error) => {
                   console.log("Stories: ", error);
