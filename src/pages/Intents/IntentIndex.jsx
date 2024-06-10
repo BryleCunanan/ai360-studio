@@ -11,7 +11,6 @@ const IntentIndex = () => {
   const [filteredItems, setFilteredItems] = useState([]);
   const [hiddenItems, setHiddenItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [followUpItems, setFollowUpItems] = useState([]);
   const confirmDeleteRef = useRef(true);
   const [isRefresh, setIsRefresh] = useState(false);
 
@@ -107,53 +106,86 @@ const IntentIndex = () => {
     setFilteredItems(updatedItems);
   };
 
-  const handleDeleteFollowUp = (index, followUpIndex) => {
-    const updatedItems = [...items];
-    if (followUpIndex !== undefined) {
-      updatedItems[index].followUps.splice(followUpIndex, 1);
-    }
-    setItems(updatedItems);
-    setFilteredItems(updatedItems);
-  };
+  // const handleDeleteFollowUp = (index, followUpIndex) => {
+  //   const updatedItems = [...items];
+  //   if (followUpIndex !== undefined) {
+  //     updatedItems[index].followUps.splice(followUpIndex, 1);
+  //   }
+  //   setItems(updatedItems);
+  //   setFilteredItems(updatedItems);
+  // };
 
-  const handleDeleteIntent = (index) => {
+  const handleDeleteIntent = (
+    index,
+    followUpIndex,
+    item,
+    isFollowUp = false
+  ) => {
+    const itemIndex = isFollowUp ? followUpIndex : index;
     const newHiddenItems = [...hiddenItems];
+
     newHiddenItems[index] = true;
     setHiddenItems(newHiddenItems);
     confirmDeleteRef.current = true;
 
+    const intentName = isFollowUp
+      ? filteredItems[index].followUpIntents[followUpIndex].intentName
+      : filteredItems[index].parentIntentName;
+    const intentId = isFollowUp
+      ? filteredItems[index].followUpIntents[followUpIndex].intentId
+      : filteredItems[index].parentIntentId;
+
+    const story_id = filteredItems[index]._id;
+
+    showMessage(intentName, index, isFollowUp, story_id, intentId);
+  };
+
+  const showMessage = (intentName, index, isFollowUp, story_id, intentId) => {
     message.open({
       content: (
         <span>
-          Intent "{items[index].intentName}" was deleted.
+          Intent "{intentName}" was deleted.
           <Divider type="vertical" />
           <Button
             type="text"
             icon={<UndoOutlined />}
-            onClick={() => handleUndo(index, items[index].intentName)}
+            onClick={() => handleUndo(index, intentName, isFollowUp)}
           />
         </span>
       ),
-      duration: 5,
+      duration: 3,
       onClose: () => {
         if (confirmDeleteRef.current) {
-          console.log("Deleting... ", items[index]._id);
+          console.log("Deleting... ", {
+            story_id,
+          });
+
+          const url = "";
+          const payload = isFollowUp ? { story_id, intentId } : { story_id };
+
           axios
-            .delete(import.meta.env.APP_SERVER_URL + "/story/delete", [
-              items[index]._id,
-            ])
+            .post(import.meta.env.APP_SERVER_URL + "/story-delete", payload)
             .then((result) => {
+              if (isFollowUp) {
+                const updatedItems = [...items];
+                updatedItems[index].followUpIntents.splice(followUpIndex, 1);
+                setItems(updatedItems);
+                setFilteredItems(updatedItems);
+              } else {
+                setIsRefresh(true);
+              }
               console.log("Deleted: ", result);
             });
         }
       },
-      key: items[index].intentName,
+      key: intentName,
     });
   };
 
-  const handleUndo = (index, key) => {
+  const handleUndo = (index, key, isFollowUp) => {
     const newHiddenItems = [...hiddenItems];
-    newHiddenItems[index] = false;
+    const itemIndex = isFollowUp ? index : index;
+    newHiddenItems[itemIndex] = false;
     setHiddenItems(newHiddenItems);
     confirmDeleteRef.current = false;
     message.destroy(key);
@@ -250,7 +282,12 @@ const IntentIndex = () => {
                               className="delete-btn"
                               type="text"
                               onClick={() =>
-                                handleDeleteFollowUp(index, followUpIndex)
+                                handleDeleteIntent(
+                                  index,
+                                  followUpIndex,
+                                  followUp,
+                                  true
+                                )
                               }
                               icon={<DeleteFilled />}
                             />,
