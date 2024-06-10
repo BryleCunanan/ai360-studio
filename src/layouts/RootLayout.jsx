@@ -30,6 +30,8 @@ const RootLayout = () => {
     axios.defaults.headers.common["Authorization"] =
       localStorage.getItem("token");
 
+    console.log("token", axios.defaults.headers.common["Authorization"]);
+
     if (axios.defaults.headers.common["Authorization"]) {
       setUsername(localStorage.getItem("username"));
       console.log("Logged in");

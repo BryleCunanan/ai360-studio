@@ -1,7 +1,8 @@
 import { Divider, Input, List, Button, Flex, message } from "antd";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { DeleteFilled, UndoOutlined, LoadingOutlined } from "@ant-design/icons";
+// import { deleteLogin } from "../../helpers/loginHelper";
 import axios from "axios";
 
 const { Search } = Input;
@@ -13,6 +14,7 @@ const IntentIndex = () => {
   const [isLoading, setIsLoading] = useState(true);
   const confirmDeleteRef = useRef(true);
   const [isRefresh, setIsRefresh] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     //Get data from database
@@ -43,7 +45,7 @@ const IntentIndex = () => {
         setFilteredItems(data);
       })
       .catch((error) => {
-        console.log("List of Intents:", error);
+        console.log("story: ", error);
       })
       .finally(() => {
         setIsLoading(false);
@@ -137,7 +139,7 @@ const IntentIndex = () => {
 
     const story_id = filteredItems[index]._id;
 
-    showMessage(intentName, index, isFollowUp, story_id, intentId);
+    showMessage(intentName, itemIndex, isFollowUp, story_id, intentId);
   };
 
   const showMessage = (intentName, index, isFollowUp, story_id, intentId) => {
@@ -160,8 +162,9 @@ const IntentIndex = () => {
             story_id,
           });
 
-          const url = "";
-          const payload = isFollowUp ? { story_id, intentId } : { story_id };
+          const payload = isFollowUp
+            ? { isFollowUp, story_id, intentId }
+            : { isFollowUp, story_id };
 
           axios
             .post(import.meta.env.APP_SERVER_URL + "/story-delete", payload)
@@ -175,7 +178,8 @@ const IntentIndex = () => {
                 setIsRefresh(true);
               }
               console.log("Deleted: ", result);
-            });
+            })
+            .catch((error) => {});
         }
       },
       key: intentName,

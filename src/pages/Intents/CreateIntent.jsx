@@ -1,9 +1,10 @@
-import { Divider, Flex, Button, Input, List } from "antd";
+import { Divider, Flex, Button, Input, List, message } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import { DeleteFilled } from "@ant-design/icons";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+// import { deleteLogin } from "../../helpers/loginHelper";
 
 const boxStyle = {
   width: "100%",
@@ -85,6 +86,7 @@ const CreateIntent = () => {
                 })
                 .then((result) => {
                   console.log("Stories: ", result);
+                  message.success("Saved!", 2);
                   navigate(`/intents/${intentId}`, { replace: true });
                 })
                 .catch((error) => {
@@ -107,16 +109,20 @@ const CreateIntent = () => {
         })
         .then((result) => {
           console.log(result.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      axios
-        .post(import.meta.env.APP_SERVER_URL + "/knowledge/" + knowledgeID, {
-          knowledge: knowledgeData,
-        })
-        .then((result) => {
-          console.log(result);
+          axios
+            .post(
+              import.meta.env.APP_SERVER_URL + "/knowledge/" + knowledgeID,
+              {
+                knowledge: knowledgeData,
+              }
+            )
+            .then((result) => {
+              message.success("Saved!", 2);
+              console.log(result);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         })
         .catch((error) => {
           console.log(error);
