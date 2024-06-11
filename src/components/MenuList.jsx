@@ -15,10 +15,10 @@ const MenuList = ({ darkTheme, isLoggedIn }) => {
 
   useEffect(() => {
     setRole(localStorage.getItem("role"));
-  }, []);
+  }, [isLoggedIn]);
 
   const items = [
-    { label: "Home", icon: <HomeOutlined />, key: "/" },
+    { label: "Home", icon: <HomeOutlined />, key: "" },
     {
       label: "Intents",
       icon: <MessageOutlined />,
@@ -55,7 +55,6 @@ const MenuList = ({ darkTheme, isLoggedIn }) => {
 
   const location = useLocation();
   const selectedMenuItem = location.pathname.split("/")[1];
-  console.log(selectedMenuItem);
 
   return (
     <Menu

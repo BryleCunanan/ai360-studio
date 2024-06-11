@@ -32,7 +32,7 @@ const LoginForm = ({
       handleLoginButton(true);
       handleModalUpdate(false);
       message.success("Login Successful", 2);
-      setLoginFailed(false); // Reset the loginFailed state on successful login
+      setLoginFailed(false);
     } catch (error) {
       console.error(error);
       setLoginFailed(true);
@@ -71,14 +71,6 @@ const LoginForm = ({
         rules={[{ required: true, message: "Please input your password!" }]}
       >
         <Input.Password />
-      </Form.Item>
-
-      <Form.Item
-        name="remember"
-        valuePropName="checked"
-        wrapperCol={{ offset: 8, span: 16 }}
-      >
-        <Checkbox>Remember me</Checkbox>
       </Form.Item>
 
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
