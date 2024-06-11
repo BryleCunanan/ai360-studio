@@ -2,7 +2,6 @@ import { Button, Select, Form, Input } from "antd";
 import axios from "axios";
 import { deleteLogin } from "../helpers/loginHelper";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 
 const UserForm = ({ data, handleDrawerOpen, isNewUser }) => {
   const navigate = useNavigate();
@@ -21,8 +20,7 @@ const UserForm = ({ data, handleDrawerOpen, isNewUser }) => {
     if (isNewUser) {
       axios
         .post(import.meta.env.APP_SERVER_URL + "/user", value)
-        .then((result) => {
-          console.log(result);
+        .then(() => {
           handleDrawerOpen(false);
         })
         .catch((error) => {
@@ -33,8 +31,7 @@ const UserForm = ({ data, handleDrawerOpen, isNewUser }) => {
       console.log("value: ", value);
       axios
         .post(import.meta.env.APP_SERVER_URL + "/user/" + data._id, value)
-        .then((result) => {
-          console.log(result);
+        .then(() => {
           handleDrawerOpen(false);
         })
         .catch((error) => {
@@ -42,14 +39,6 @@ const UserForm = ({ data, handleDrawerOpen, isNewUser }) => {
           deleteLogin(error, navigate);
         });
     }
-  };
-
-  const onFinishFailed = () => {
-    console.log("Not Finished.");
-  };
-
-  const handleChange = (value) => {
-    console.log("role:", value);
   };
 
   return (
@@ -65,7 +54,6 @@ const UserForm = ({ data, handleDrawerOpen, isNewUser }) => {
         maxWidth: 600,
       }}
       onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
       <Form.Item

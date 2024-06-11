@@ -7,14 +7,20 @@ import ReactFlow, {
   useNodesState,
   useEdgesState,
   addEdge,
+  Panel,
+  useReactFlow,
 } from "reactflow";
 import { LoadingOutlined } from "@ant-design/icons";
 
 import "reactflow/dist/style.css";
+import { Button } from "antd";
 
 const Knowledge = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [intentData, setIntentData] = useState([]);
+
+  const flow = useReactFlow();
+
   useEffect(() => {
     axios
       .get(import.meta.env.APP_SERVER_URL + "/intent")
@@ -76,6 +82,20 @@ const Knowledge = () => {
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
           >
+            <Panel position="top-right">
+              <Button
+                type="primary"
+                onClick={useCallback(() => {
+                  flow.addNodes({
+                    id: "1",
+                    position: { x: 0, y: 0 },
+                    data: { label: "parking" },
+                  });
+                }, [flow])}
+              >
+                Save
+              </Button>
+            </Panel>
             <Controls />
             <MiniMap />
             <Background variant="lines" gap={12} size={2} />

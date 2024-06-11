@@ -27,7 +27,6 @@ const IntentIndex = () => {
       .get(import.meta.env.APP_SERVER_URL + "/story")
       .then((response) => {
         const data = response.data;
-        console.log("List of Intents: ", data);
         setItems(data);
         setFilteredItems(data);
       })
@@ -45,7 +44,6 @@ const IntentIndex = () => {
     const updatedItems = [...items];
     const parentIntent = updatedItems[index];
     const newFollowUp = parentIntent.parentIntentName + " - custom";
-    console.log("newFollowUp", newFollowUp);
     const parentStory = parentIntent._id;
     axios
       .post(import.meta.env.APP_SERVER_URL + "/intent", {
@@ -54,26 +52,18 @@ const IntentIndex = () => {
         followUp: true,
       })
       .then((intentId) => {
-        console.log("Add Follow up: ", {
-          intentName: newFollowUp,
-          intentId: [parentIntent.parentIntentId, intentId.data],
-        });
-
         axios
           .post(import.meta.env.APP_SERVER_URL + "/knowledge", {
             intentNameId: intentId.data,
             knowledge: [],
           })
-          .then((knowledgeId) => {
-            console.log("Knowledge: ", knowledgeId);
-
+          .then(() => {
             axios
               .post(import.meta.env.APP_SERVER_URL + "/story/" + parentStory, {
                 parentIntentId: parentIntent.parentIntentId,
                 followUpIntentId: intentId.data,
               })
-              .then((result) => {
-                console.log("Stories: ", result);
+              .then(() => {
                 setIsRefresh(true);
               })
               .catch((error) => {
@@ -160,7 +150,6 @@ const IntentIndex = () => {
             .post(import.meta.env.APP_SERVER_URL + "/story-delete", payload)
             .then((result) => {
               setIsRefresh(true);
-              console.log("Deleted: ", result);
             })
             .catch((error) => {
               console.log(error);

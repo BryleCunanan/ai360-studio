@@ -31,12 +31,10 @@ const CreateIntent = () => {
   useEffect(() => {
     const role = localStorage.getItem("role");
     setIsDisabled(role ? role !== "editor" : true);
-    console.log(location.pathname);
     if (location.pathname !== "/intents/new") {
       axios
         .get(`${import.meta.env.APP_SERVER_URL}/intent/${id}`)
         .then((response) => {
-          console.log(response.data);
           setIntentData(response.data.intentExamples);
           setIntentName(response.data.intentName);
           setIsFollowUp(response.data.followUp);
@@ -46,7 +44,6 @@ const CreateIntent = () => {
               `${import.meta.env.APP_SERVER_URL}/knowledge/${response.data._id}`
             )
             .then((response) => {
-              console.log(response.data);
               setKnowledgeData(response.data.knowledge);
               setKnowledgeID(response.data._id);
             })
@@ -79,7 +76,6 @@ const CreateIntent = () => {
           followUp: false,
         })
         .then((result) => {
-          console.log("Intent: ", result);
           const intentId = result.data;
 
           axios
@@ -87,15 +83,13 @@ const CreateIntent = () => {
               intentNameId: intentId,
               knowledge: knowledgeData,
             })
-            .then((result) => {
-              console.log("Knowledge: ", result);
+            .then(() => {
               axios
                 .post(import.meta.env.APP_SERVER_URL + "/story", {
                   intentName,
                   intentId,
                 })
-                .then((result) => {
-                  console.log("Stories: ", result);
+                .then(() => {
                   message.success("Saved!", 2);
                   navigate(`/intents/${intentId}`, { replace: true });
                 })
@@ -121,8 +115,7 @@ const CreateIntent = () => {
           intentExamples: intentData,
           followUp: isFollowUp,
         })
-        .then((result) => {
-          console.log(result.data);
+        .then(() => {
           axios
             .post(
               import.meta.env.APP_SERVER_URL + "/knowledge/" + knowledgeID,
@@ -132,7 +125,6 @@ const CreateIntent = () => {
             )
             .then((result) => {
               message.success("Saved!", 2);
-              console.log(result);
             })
             .catch((error) => {
               console.log(error);
@@ -152,7 +144,6 @@ const CreateIntent = () => {
 
   const handleEnter = (type) => {
     if (type === "phrase") {
-      console.log("Entered Input: ", intentInput);
       if (intentInput.trim() !== "") {
         const newItem = intentInput.trim();
         const newIntentData = [...intentData, newItem];
@@ -160,7 +151,6 @@ const CreateIntent = () => {
         setIntentInput("");
       }
     } else if (type === "knowledge") {
-      console.log("Entered Knowledge: ", knowledgeInput);
       if (knowledgeInput.trim() !== "") {
         const newItem = knowledgeInput.trim();
         const newKnowledge = [...knowledgeData, newItem];
@@ -186,12 +176,10 @@ const CreateIntent = () => {
     if (type === "phrase") {
       const updatedItems = [...intentData];
       updatedItems.splice(index, 1);
-      console.log(updatedItems);
       setIntentData(updatedItems);
     } else if (type === "knowledge") {
       const updatedItems = [...knowledgeData];
       updatedItems.splice(index, 1);
-      console.log(updatedItems);
       setKnowledgeData(updatedItems);
     }
   };

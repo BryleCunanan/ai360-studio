@@ -35,10 +35,8 @@ const RootLayout = () => {
 
     if (axios.defaults.headers.common["Authorization"]) {
       setUsername(localStorage.getItem("username"));
-      console.log("Logged in");
       setIsLoggedIn(true);
     } else {
-      console.log("Logged out");
       setIsLoggedIn(false);
       deleteLogin(null, navigate);
     }

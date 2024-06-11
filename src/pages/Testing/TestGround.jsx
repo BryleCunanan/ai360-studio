@@ -19,14 +19,12 @@ const TestGround = () => {
   };
 
   const handleSend = () => {
-    console.log(inputValue);
     if (inputValue.trim() !== "") {
       axios
         .post("http://54.254.184.220:5005/webhooks/rest/webhook", {
           message: inputValue,
         })
         .then((response) => {
-          console.log("Message: ", response.data);
           setBotResponse(response.data);
         })
         .catch((error) => {

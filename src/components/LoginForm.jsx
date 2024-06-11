@@ -1,4 +1,4 @@
-import { Button, Checkbox, Form, Input, message } from "antd";
+import { Button, Form, Input, message } from "antd";
 import axios from "axios";
 import { useState } from "react";
 
@@ -24,7 +24,6 @@ const LoginForm = ({
       localStorage.setItem("token", `Bearer ${token}`);
       localStorage.setItem("username", user.name);
       localStorage.setItem("role", user.role);
-      console.log("Local: ", localStorage.getItem("username"));
       handleUsername(localStorage.getItem("username"));
 
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
