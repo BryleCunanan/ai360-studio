@@ -3,6 +3,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import UserForm from "../../components/UserForm";
 import axios from "axios";
+import { deleteLogin } from "../../helpers/loginHelper";
 
 const columns = [
   {
@@ -37,6 +38,7 @@ const UserAccess = () => {
       })
       .catch((error) => {
         console.log(error);
+        deleteLogin(error, "/");
       })
       .finally(() => {
         setIsLoading(false);

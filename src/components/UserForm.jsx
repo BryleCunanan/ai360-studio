@@ -1,5 +1,6 @@
 import { Button, Select, Form, Input } from "antd";
 import axios from "axios";
+import { deleteLogin } from "../helpers/loginHelper";
 
 const UserForm = ({ data, handleDrawerOpen, isNewUser }) => {
   console.log("New User? ", isNewUser);
@@ -25,6 +26,7 @@ const UserForm = ({ data, handleDrawerOpen, isNewUser }) => {
         })
         .catch((error) => {
           console.log(error);
+          deleteLogin(error, "/");
         });
     } else {
       axios
@@ -35,6 +37,7 @@ const UserForm = ({ data, handleDrawerOpen, isNewUser }) => {
         })
         .catch((error) => {
           console.log(error);
+          deleteLogin(error, "/");
         });
     }
   };
