@@ -21,10 +21,13 @@ const CreateIntent = () => {
   const [knowledgeData, setKnowledgeData] = useState([]);
   const [knowledgeID, setKnowledgeID] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const navigate = useNavigate();
 
   useEffect(() => {
+    const role = localStorage.getItem("role");
+    setIsDisabled(role ? role !== "editor" : true);
     if (location.pathname !== "/intents/new") {
       axios
         .get(`${import.meta.env.APP_SERVER_URL}/intent/${id}`)
@@ -207,8 +210,13 @@ const CreateIntent = () => {
                 variant="filled"
                 value={intentName}
                 onChange={handleIntentName}
+                disabled={isDisabled}
               />
-              <Button type="primary" onClick={handleSubmit}>
+              <Button
+                type="primary"
+                onClick={handleSubmit}
+                disabled={isDisabled}
+              >
                 Save
               </Button>
             </Flex>
@@ -227,6 +235,7 @@ const CreateIntent = () => {
                 onChange={(e) => {
                   setIntentInput(e.target.value);
                 }}
+                disabled={isDisabled}
                 onPressEnter={() => handleEnter("phrase")}
               />
               <List
@@ -241,10 +250,12 @@ const CreateIntent = () => {
                       onChange={(e) =>
                         handleChange(e.target.value, index, "phrase")
                       }
+                      disabled={isDisabled}
                     />
                     <Button
                       type="text"
                       onClick={() => handleDelete(index, "phrase")}
+                      disabled={isDisabled}
                     >
                       <DeleteFilled />
                     </Button>
@@ -267,6 +278,7 @@ const CreateIntent = () => {
                 onChange={(e) => {
                   setKnowledgeInput(e.target.value);
                 }}
+                disabled={isDisabled}
                 onPressEnter={() => handleEnter("knowledge")}
               />
               <List
@@ -281,10 +293,12 @@ const CreateIntent = () => {
                       onChange={(e) =>
                         handleChange(e.target.value, index, "knowledge")
                       }
+                      disabled={isDisabled}
                     />
                     <Button
                       type="text"
                       onClick={() => handleDelete(index, "knowledge")}
+                      disabled={isDisabled}
                     >
                       <DeleteFilled />
                     </Button>

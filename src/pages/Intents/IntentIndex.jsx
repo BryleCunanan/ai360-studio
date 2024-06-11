@@ -16,9 +16,13 @@ const IntentIndex = () => {
   const confirmDeleteRef = useRef(true);
   const [isRefresh, setIsRefresh] = useState(false);
 
+  const [isDisabled, setIsDisabled] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
+    const role = localStorage.getItem("role");
+    setIsDisabled(role ? role !== "editor" : true);
     axios
       .get(import.meta.env.APP_SERVER_URL + "/story")
       .then((response) => {
@@ -218,7 +222,9 @@ const IntentIndex = () => {
               size="large"
             />
             <NavLink to="new">
-              <Button type="primary">Create Intent</Button>
+              <Button type="primary" disabled={isDisabled}>
+                Create Intent
+              </Button>
             </NavLink>
             <Button type="primary" disabled>
               Train Chatbot
@@ -240,24 +246,28 @@ const IntentIndex = () => {
                   <div key={item.parentIntentName}>
                     <List.Item
                       className="intent-item"
-                      actions={[
-                        <Button
-                          className="follow-up-btn"
-                          type="text"
-                          onClick={() => handleAddFollowUp(index)}
-                        >
-                          Add Follow-up Intent
-                        </Button>,
-                        <Button
-                          className="delete-btn"
-                          type="text"
-                          onClick={() =>
-                            handleDeleteIntent(index, index, item, false)
-                          }
-                        >
-                          <DeleteFilled />
-                        </Button>,
-                      ]}
+                      actions={
+                        isDisabled
+                          ? null
+                          : [
+                              <Button
+                                className="follow-up-btn"
+                                type="text"
+                                onClick={() => handleAddFollowUp(index)}
+                              >
+                                Add Follow-up Intent
+                              </Button>,
+                              <Button
+                                className="delete-btn"
+                                type="text"
+                                onClick={() =>
+                                  handleDeleteIntent(index, index, item, false)
+                                }
+                              >
+                                <DeleteFilled />
+                              </Button>,
+                            ]
+                      }
                       key={item.parentIntentName}
                     >
                       <NavLink to={item.parentIntentId}>

@@ -38,11 +38,13 @@ const MenuList = ({ darkTheme, isLoggedIn }) => {
       label: "Testing",
       icon: <ApiOutlined />,
       key: "/test",
+      role: "tester",
     },
     {
       label: "Settings",
       icon: <SettingFilled />,
       key: "/settings",
+      role: "admin",
     },
   ];
 

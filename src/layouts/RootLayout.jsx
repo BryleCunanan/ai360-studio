@@ -8,9 +8,10 @@ import Logo from "../components/Logo";
 import MenuList from "../components/MenuList";
 import { useEffect, useState } from "react";
 import ToggleThemeButton from "../components/ToggleThemeButton";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import LoginForm from "../components/LoginForm";
 import axios from "axios";
+import { deleteLogin } from "../helpers/loginHelper";
 
 const { Header, Sider, Content } = Layout;
 
@@ -21,6 +22,8 @@ const RootLayout = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(null);
   const [username, setUsername] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate();
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -39,6 +42,7 @@ const RootLayout = () => {
     } else {
       console.log("Logged out");
       setIsLoggedIn(false);
+      deleteLogin(null, navigate);
     }
 
     setLoading(false);
