@@ -2,7 +2,6 @@ import { Divider, Input, List, Button, Flex, message } from "antd";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { DeleteFilled, UndoOutlined, LoadingOutlined } from "@ant-design/icons";
-// import { deleteLogin } from "../../helpers/loginHelper";
 import axios from "axios";
 
 const { Search } = Input;
@@ -10,32 +9,14 @@ const { Search } = Input;
 const IntentIndex = () => {
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
-  const [hiddenItems, setHiddenItems] = useState([]);
+  const [hiddenParents, setHiddenParents] = useState([]);
+  const [hiddenFollowUps, setHiddenFollowUps] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const confirmDeleteRef = useRef(true);
   const [isRefresh, setIsRefresh] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    //Get data from database
-    //   [
-    //     {
-    //         "_id": "66613994d67a49d2e42e6c35",
-    //         "story_name": "parking_6pGz0",
-    //         "parentIntentId": "6653ea8d163616451561a219",
-    //         "parentIntentName": "parking ng lolo mo",
-    //         "followUpIntents": [
-    //             {
-    //                 "intentName": "parking - custom",
-    //                 "intentId": "6661008736deb653ac63e512"
-    //             },
-    //             {
-    //                 "intentName": "nails_- custom",
-    //                 "intentId": "66610cc53b1d176c293e02e2"
-    //             }
-    //         ]
-    //     }
-    // ]
     axios
       .get(import.meta.env.APP_SERVER_URL + "/story")
       .then((response) => {
@@ -108,26 +89,23 @@ const IntentIndex = () => {
     setFilteredItems(updatedItems);
   };
 
-  // const handleDeleteFollowUp = (index, followUpIndex) => {
-  //   const updatedItems = [...items];
-  //   if (followUpIndex !== undefined) {
-  //     updatedItems[index].followUps.splice(followUpIndex, 1);
-  //   }
-  //   setItems(updatedItems);
-  //   setFilteredItems(updatedItems);
-  // };
-
   const handleDeleteIntent = (
     index,
-    followUpIndex,
+    followUpIndex = null,
     item,
     isFollowUp = false
   ) => {
     const itemIndex = isFollowUp ? followUpIndex : index;
-    const newHiddenItems = [...hiddenItems];
+    const newHiddenitems = isFollowUp
+      ? [...hiddenFollowUps]
+      : [...hiddenParents];
 
-    newHiddenItems[index] = true;
-    setHiddenItems(newHiddenItems);
+    newHiddenitems[itemIndex] = true;
+
+    isFollowUp
+      ? setHiddenFollowUps(newHiddenitems)
+      : setHiddenParents(newHiddenitems);
+
     confirmDeleteRef.current = true;
 
     const intentName = isFollowUp
@@ -142,7 +120,13 @@ const IntentIndex = () => {
     showMessage(intentName, itemIndex, isFollowUp, story_id, intentId);
   };
 
-  const showMessage = (intentName, index, isFollowUp, story_id, intentId) => {
+  const showMessage = (
+    intentName,
+    itemIndex,
+    isFollowUp,
+    story_id,
+    intentId
+  ) => {
     message.open({
       content: (
         <span>
@@ -151,17 +135,13 @@ const IntentIndex = () => {
           <Button
             type="text"
             icon={<UndoOutlined />}
-            onClick={() => handleUndo(index, intentName, isFollowUp)}
+            onClick={() => handleUndo(itemIndex, intentName, isFollowUp)}
           />
         </span>
       ),
       duration: 3,
       onClose: () => {
         if (confirmDeleteRef.current) {
-          console.log("Deleting... ", {
-            story_id,
-          });
-
           const payload = isFollowUp
             ? { isFollowUp, story_id, intentId }
             : { isFollowUp, story_id };
@@ -169,28 +149,27 @@ const IntentIndex = () => {
           axios
             .post(import.meta.env.APP_SERVER_URL + "/story-delete", payload)
             .then((result) => {
-              if (isFollowUp) {
-                const updatedItems = [...items];
-                updatedItems[index].followUpIntents.splice(followUpIndex, 1);
-                setItems(updatedItems);
-                setFilteredItems(updatedItems);
-              } else {
-                setIsRefresh(true);
-              }
+              setIsRefresh(true);
               console.log("Deleted: ", result);
             })
-            .catch((error) => {});
+            .catch((error) => {
+              console.log(error);
+            });
         }
       },
       key: intentName,
     });
   };
 
-  const handleUndo = (index, key, isFollowUp) => {
-    const newHiddenItems = [...hiddenItems];
-    const itemIndex = isFollowUp ? index : index;
-    newHiddenItems[itemIndex] = false;
-    setHiddenItems(newHiddenItems);
+  const handleUndo = (itemIndex, key, isFollowUp) => {
+    const newHiddenitems = isFollowUp
+      ? [...hiddenFollowUps]
+      : [...hiddenParents];
+
+    newHiddenitems[itemIndex] = false;
+    isFollowUp
+      ? setHiddenFollowUps(newHiddenitems)
+      : setHiddenParents(newHiddenitems);
     confirmDeleteRef.current = false;
     message.destroy(key);
   };
@@ -247,7 +226,7 @@ const IntentIndex = () => {
               itemLayout="horizontal"
               dataSource={filteredItems}
               renderItem={(item, index) =>
-                !hiddenItems[index] && (
+                !hiddenParents[index] && (
                   <div key={item.parentIntentName}>
                     <List.Item
                       className="intent-item"
@@ -262,7 +241,9 @@ const IntentIndex = () => {
                         <Button
                           className="delete-btn"
                           type="text"
-                          onClick={() => handleDeleteIntent(index)}
+                          onClick={() =>
+                            handleDeleteIntent(index, index, item, false)
+                          }
                         >
                           <DeleteFilled />
                         </Button>,
@@ -279,29 +260,31 @@ const IntentIndex = () => {
                       }}
                       locale={{ emptyText: " No intents" }}
                       dataSource={item.followUpIntents}
-                      renderItem={(followUp, followUpIndex) => (
-                        <List.Item
-                          actions={[
-                            <Button
-                              className="delete-btn"
-                              type="text"
-                              onClick={() =>
-                                handleDeleteIntent(
-                                  index,
-                                  followUpIndex,
-                                  followUp,
-                                  true
-                                )
-                              }
-                              icon={<DeleteFilled />}
-                            />,
-                          ]}
-                        >
-                          <NavLink to={followUp.intentId}>
-                            {followUp.intentName}
-                          </NavLink>
-                        </List.Item>
-                      )}
+                      renderItem={(followUp, followUpIndex) =>
+                        !hiddenFollowUps[followUpIndex] && (
+                          <List.Item
+                            actions={[
+                              <Button
+                                className="delete-btn"
+                                type="text"
+                                onClick={() =>
+                                  handleDeleteIntent(
+                                    index,
+                                    followUpIndex,
+                                    followUp,
+                                    true
+                                  )
+                                }
+                                icon={<DeleteFilled />}
+                              />,
+                            ]}
+                          >
+                            <NavLink to={followUp.intentId}>
+                              {followUp.intentName}
+                            </NavLink>
+                          </List.Item>
+                        )
+                      }
                     />
                   </div>
                 )
