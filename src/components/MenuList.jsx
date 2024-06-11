@@ -22,29 +22,29 @@ const MenuList = ({ darkTheme, isLoggedIn }) => {
     {
       label: "Intents",
       icon: <MessageOutlined />,
-      key: "/intents",
+      key: "intents",
     },
     {
       label: "Entities",
       icon: <ForkOutlined />,
-      key: "/entities",
+      key: "entities",
     },
     {
       label: "Knowledge",
       icon: <BookOutlined />,
-      key: "/knowledge",
+      key: "knowledge",
       role: "beta",
     },
     {
       label: "Testing",
       icon: <ApiOutlined />,
-      key: "/test",
+      key: "test",
       role: "tester",
     },
     {
       label: "Settings",
       icon: <SettingFilled />,
-      key: "/settings",
+      key: "settings",
       role: "admin",
     },
   ];
@@ -54,13 +54,15 @@ const MenuList = ({ darkTheme, isLoggedIn }) => {
     : items.filter((item) => item.key === "/");
 
   const location = useLocation();
-  const selectedMenuItem = items.find((item) => location.pathname === item.key);
+  const selectedMenuItem = location.pathname.split("/")[1];
+  console.log(selectedMenuItem);
 
   return (
     <Menu
       theme={darkTheme ? "dark" : "light"}
       className="menu-bar"
-      selectedKeys={selectedMenuItem ? [selectedMenuItem.key] : []}
+      mode="inline"
+      defaultSelectedKeys={[selectedMenuItem]}
     >
       {filteredItems.map((item) => (
         <Menu.Item key={item.key} icon={item.icon}>
