@@ -283,21 +283,25 @@ const IntentIndex = () => {
                       renderItem={(followUp, followUpIndex) =>
                         !hiddenFollowUps[followUpIndex] && (
                           <List.Item
-                            actions={[
-                              <Button
-                                className="delete-btn"
-                                type="text"
-                                onClick={() =>
-                                  handleDeleteIntent(
-                                    index,
-                                    followUpIndex,
-                                    followUp,
-                                    true
-                                  )
-                                }
-                                icon={<DeleteFilled />}
-                              />,
-                            ]}
+                            actions={
+                              isDisabled
+                                ? null
+                                : [
+                                    <Button
+                                      className="delete-btn"
+                                      type="text"
+                                      onClick={() =>
+                                        handleDeleteIntent(
+                                          index,
+                                          followUpIndex,
+                                          followUp,
+                                          true
+                                        )
+                                      }
+                                      icon={<DeleteFilled />}
+                                    />,
+                                  ]
+                            }
                           >
                             <NavLink to={followUp.intentId}>
                               {followUp.intentName}
