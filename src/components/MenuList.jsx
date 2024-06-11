@@ -8,12 +8,15 @@ import {
   ApiOutlined,
 } from "@ant-design/icons";
 import { NavLink, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const MenuList = ({ darkTheme, isLoggedIn }) => {
+  const [role, setRole] = useState();
+
   useEffect(() => {
-    console.log(isLoggedIn);
+    setRole(localStorage.getItem("role"));
   }, []);
+
   const items = [
     { label: "Home", icon: <HomeOutlined />, key: "/" },
     {
@@ -44,7 +47,7 @@ const MenuList = ({ darkTheme, isLoggedIn }) => {
   ];
 
   const filteredItems = isLoggedIn
-    ? items
+    ? items.filter((item) => (item.role ? item.role === role : true))
     : items.filter((item) => item.key === "/");
 
   const location = useLocation();
