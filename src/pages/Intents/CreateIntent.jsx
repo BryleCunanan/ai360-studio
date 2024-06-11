@@ -17,6 +17,7 @@ const CreateIntent = () => {
   const [intentName, setIntentName] = useState("");
   const [intentData, setIntentData] = useState([]);
   const [intentInput, setIntentInput] = useState("");
+  const [isFollowUp, setIsFollowUp] = useState(false);
   const [knowledgeInput, setKnowledgeInput] = useState("");
   const [knowledgeData, setKnowledgeData] = useState([]);
   const [knowledgeID, setKnowledgeID] = useState("");
@@ -35,6 +36,7 @@ const CreateIntent = () => {
           console.log(response.data);
           setIntentData(response.data.intentExamples);
           setIntentName(response.data.intentName);
+          setIsFollowUp(response.data.followUp);
 
           axios
             .get(
@@ -114,6 +116,7 @@ const CreateIntent = () => {
         .post(import.meta.env.APP_SERVER_URL + "/intent/" + id, {
           intentName,
           intentExamples: intentData,
+          followUp: isFollowUp,
         })
         .then((result) => {
           console.log(result.data);
