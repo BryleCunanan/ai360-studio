@@ -3,7 +3,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import { DeleteFilled } from "@ant-design/icons";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { deleteLogin } from "../../helpers/loginHelper";
 import TextArea from "antd/es/input/TextArea";
 
@@ -26,10 +26,12 @@ const CreateIntent = () => {
   const [isDisabled, setIsDisabled] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const role = localStorage.getItem("role");
     setIsDisabled(role ? role !== "editor" : true);
+    console.log(location.pathname);
     if (location.pathname !== "/intents/new") {
       axios
         .get(`${import.meta.env.APP_SERVER_URL}/intent/${id}`)
@@ -225,49 +227,54 @@ const CreateIntent = () => {
               </Button>
             </Flex>
           </div>
-          <Divider orientation="left">Training Phrases</Divider>
-          <div>
-            <p style={{ textAlign: "left" }}>
-              Write user expressions that are inline with this intent.
-            </p>
-            <div style={{ textAlign: "left" }}>
-              <Input
-                placeholder="Add user expression"
-                size="large"
-                value={intentInput}
-                style={{ marginTop: 20, marginBottom: 20 }}
-                onChange={(e) => {
-                  setIntentInput(e.target.value);
-                }}
-                disabled={isDisabled}
-                onPressEnter={() => handleEnter("phrase")}
-              />
-              <List
-                dataSource={intentData}
-                bordered
-                renderItem={(item, index) => (
-                  <List.Item key={index}>
-                    <Input
-                      style={{ width: "100%" }}
-                      value={intentData[index]}
-                      variant="Borderless"
-                      onChange={(e) =>
-                        handleChange(e.target.value, index, "phrase")
-                      }
-                      disabled={isDisabled}
-                    />
-                    <Button
-                      type="text"
-                      onClick={() => handleDelete(index, "phrase")}
-                      disabled={isDisabled}
-                    >
-                      <DeleteFilled />
-                    </Button>
-                  </List.Item>
-                )}
-              />
-            </div>
-          </div>
+          {isFollowUp ? null : (
+            <>
+              <Divider orientation="left">Training Phrases</Divider>
+              <div>
+                <p style={{ textAlign: "left" }}>
+                  Write user expressions that are inline with this intent.
+                </p>
+                <div style={{ textAlign: "left" }}>
+                  <Input
+                    placeholder="Add user expression"
+                    size="large"
+                    value={intentInput}
+                    style={{ marginTop: 20, marginBottom: 20 }}
+                    onChange={(e) => {
+                      setIntentInput(e.target.value);
+                    }}
+                    disabled={isDisabled}
+                    onPressEnter={() => handleEnter("phrase")}
+                  />
+                  <List
+                    dataSource={intentData}
+                    bordered
+                    renderItem={(item, index) => (
+                      <List.Item key={index}>
+                        <Input
+                          style={{ width: "100%" }}
+                          value={intentData[index]}
+                          variant="Borderless"
+                          onChange={(e) =>
+                            handleChange(e.target.value, index, "phrase")
+                          }
+                          disabled={isDisabled}
+                        />
+                        <Button
+                          type="text"
+                          onClick={() => handleDelete(index, "phrase")}
+                          disabled={isDisabled}
+                        >
+                          <DeleteFilled />
+                        </Button>
+                      </List.Item>
+                    )}
+                  />
+                </div>
+              </div>
+            </>
+          )}
+
           <Divider orientation="left">Response</Divider>
           <div>
             <p style={{ textAlign: "left" }}>
