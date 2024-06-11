@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { DeleteFilled, UndoOutlined, LoadingOutlined } from "@ant-design/icons";
 import axios from "axios";
+import { deleteLogin } from "../../helpers/loginHelper";
 
 const { Search } = Input;
 
@@ -14,7 +15,6 @@ const IntentIndex = () => {
   const [isLoading, setIsLoading] = useState(true);
   const confirmDeleteRef = useRef(true);
   const [isRefresh, setIsRefresh] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -27,6 +27,7 @@ const IntentIndex = () => {
       })
       .catch((error) => {
         console.log("story: ", error);
+        deleteLogin(error, "/");
       })
       .finally(() => {
         setIsLoading(false);
@@ -71,14 +72,17 @@ const IntentIndex = () => {
               })
               .catch((error) => {
                 console.log("Stories: ", error);
+                deleteLogin(error, "/");
               });
           })
           .catch((error) => {
             console.log("Knowledge: ", error);
+            deleteLogin(error, "/");
           });
       })
       .catch((error) => {
         console.log("Add Follow-up: ", error);
+        deleteLogin(error, "/");
       });
 
     if (!parentIntent.followUpIntents) {
@@ -154,6 +158,7 @@ const IntentIndex = () => {
             })
             .catch((error) => {
               console.log(error);
+              deleteLogin(error, "/");
             });
         }
       },
@@ -202,7 +207,7 @@ const IntentIndex = () => {
         </div>
       ) : (
         <>
-          <Flex style={{ width: "100%" }} justify="space-evenly" align="center">
+          <Flex style={{ width: "100%" }} justify="space-around" align="center">
             <Search
               placeholder="Search Intents"
               allowClear
@@ -213,6 +218,9 @@ const IntentIndex = () => {
             <NavLink to="new">
               <Button type="primary">Create Intent</Button>
             </NavLink>
+            <Button type="primary" disabled>
+              Train Chatbot
+            </Button>
           </Flex>
           <Divider orientation="left">Intents</Divider> {/* LIST OF INTENTS */}
           <div>

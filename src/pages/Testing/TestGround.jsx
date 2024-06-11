@@ -1,6 +1,7 @@
 import { Button, Card, Divider, Flex, Input, Space } from "antd";
 import React, { useState } from "react";
 import axios from "axios";
+import { deleteLogin } from "../../helpers/loginHelper";
 
 const TestGround = () => {
   const [inputValue, setInputValue] = useState("");
@@ -27,6 +28,7 @@ const TestGround = () => {
         })
         .catch((error) => {
           console.log(error);
+          deleteLogin(error, "/");
         })
         .finally(setInputValue(""));
     }
