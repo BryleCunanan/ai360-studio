@@ -1,6 +1,6 @@
 import { Menu, Layout } from "antd";
 import { UserOutlined } from "@ant-design/icons";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 const { Content, Sider } = Layout;
 
 const items = [
@@ -16,12 +16,18 @@ const items = [
 ];
 
 const Settings = () => {
+  const location = useLocation();
   const handleClick = () => {};
 
   return (
     <Layout>
       <Sider>
-        <Menu onClick={handleClick} className="settings-menu" mode="inline">
+        <Menu
+          onClick={handleClick}
+          className="settings-menu"
+          mode="inline"
+          defaultSelectedKeys={[location.pathname.split("/")[2]]}
+        >
           {items.map((item) => (
             <Menu.Item key={item.key} icon={item.icon}>
               <NavLink to={item.key}>{item.label}</NavLink>
