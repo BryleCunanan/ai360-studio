@@ -33,6 +33,7 @@ const MenuList = ({ darkTheme, isLoggedIn }) => {
       label: "Knowledge",
       icon: <BookOutlined />,
       key: "/knowledge",
+      role: "beta",
     },
     {
       label: "Testing",
