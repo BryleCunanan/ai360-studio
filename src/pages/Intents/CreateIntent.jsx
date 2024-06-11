@@ -3,7 +3,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import { DeleteFilled } from "@ant-design/icons";
 import axios from "axios";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import { deleteLogin } from "../../helpers/loginHelper";
 import TextArea from "antd/es/input/TextArea";
 
@@ -208,9 +208,13 @@ const CreateIntent = () => {
       ) : (
         <div>
           <div>
-            <Flex style={boxStyle} justify="space-evenly" align="center">
+            <Flex style={boxStyle} justify="flex-start" align="center" gap={30}>
+              <NavLink to="/intents">
+                <Button>Back</Button>
+              </NavLink>
+
               <Input
-                style={{ width: 800 }}
+                style={{ width: 1550 }}
                 size="large"
                 placeholder="Intent Name"
                 variant="filled"
