@@ -1,4 +1,4 @@
-import { Button, Layout, theme, Modal } from "antd";
+import { Button, Layout, theme, Modal, message } from "antd";
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -107,6 +107,17 @@ const RootLayout = () => {
                   <div style={{ marginRight: 20 }}>
                     Hello,{" "}
                     {username.charAt(0).toUpperCase() + username.slice(1)}
+                    <Button
+                      style={{ marginLeft: 20 }}
+                      type="primary"
+                      onClick={() => {
+                        deleteLogin("logout", navigate);
+                        setIsLoggedIn(false);
+                        message.info("Logged out!", 2);
+                      }}
+                    >
+                      Logout
+                    </Button>
                   </div>
                 ) : (
                   <LoadingOutlined style={{ marginRight: 20 }} />

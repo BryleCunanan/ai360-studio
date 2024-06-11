@@ -31,7 +31,7 @@ const LoginForm = ({
 
       handleLoginButton(true);
       handleModalUpdate(false);
-      message.success("Login Successful");
+      message.success("Login Successful", 2);
       setLoginFailed(false); // Reset the loginFailed state on successful login
     } catch (error) {
       console.error(error);
