@@ -5,6 +5,7 @@ import { DeleteFilled } from "@ant-design/icons";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { deleteLogin } from "../../helpers/loginHelper";
+import TextArea from "antd/es/input/TextArea";
 
 const boxStyle = {
   width: "100%",
@@ -289,7 +290,7 @@ const CreateIntent = () => {
                 bordered
                 renderItem={(item, index) => (
                   <List.Item key={index}>
-                    <Input
+                    <TextArea
                       style={{ width: "100%" }}
                       value={knowledgeData[index]}
                       variant="Borderless"
@@ -297,6 +298,7 @@ const CreateIntent = () => {
                         handleChange(e.target.value, index, "knowledge")
                       }
                       disabled={isDisabled}
+                      autoSize
                     />
                     <Button
                       type="text"
