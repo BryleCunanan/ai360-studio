@@ -1,10 +1,10 @@
 import { Button, Select, Form, Input } from "antd";
 import axios from "axios";
 import { deleteLogin } from "../helpers/loginHelper";
+import { useNavigate } from "react-router-dom";
 
 const UserForm = ({ data, handleDrawerOpen, isNewUser }) => {
-  console.log("New User? ", isNewUser);
-  console.log("id: ", data._id);
+  const navigate = useNavigate();
 
   const items = [
     {
@@ -26,7 +26,7 @@ const UserForm = ({ data, handleDrawerOpen, isNewUser }) => {
         })
         .catch((error) => {
           console.log(error);
-          deleteLogin(error, "/");
+          deleteLogin(error, navigate);
         });
     } else {
       axios
@@ -37,7 +37,7 @@ const UserForm = ({ data, handleDrawerOpen, isNewUser }) => {
         })
         .catch((error) => {
           console.log(error);
-          deleteLogin(error, "/");
+          deleteLogin(error, navigate);
         });
     }
   };

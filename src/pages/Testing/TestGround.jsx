@@ -2,10 +2,13 @@ import { Button, Card, Divider, Flex, Input, Space } from "antd";
 import React, { useState } from "react";
 import axios from "axios";
 import { deleteLogin } from "../../helpers/loginHelper";
+import { useNavigate } from "react-router-dom";
 
 const TestGround = () => {
   const [inputValue, setInputValue] = useState("");
   const [botResponse, setBotResponse] = useState({});
+
+  const navigate = useNavigate();
 
   const testPayload = {
     intent: "parking",
@@ -28,7 +31,7 @@ const TestGround = () => {
         })
         .catch((error) => {
           console.log(error);
-          deleteLogin(error, "/");
+          deleteLogin(error, navigate);
         })
         .finally(setInputValue(""));
     }

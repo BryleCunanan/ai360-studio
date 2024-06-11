@@ -1,9 +1,6 @@
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
-export function deleteLogin(error, url) {
-  const navigate = useNavigate();
-
+export function deleteLogin(error, navigate) {
   if (error.response.data === "Invalid token") {
     console.log("Logging out");
     delete axios.defaults.headers.common["Authorization"];
@@ -11,6 +8,6 @@ export function deleteLogin(error, url) {
   }
 
   if (!axios.defaults.headers.common["Authorization"]) {
-    navigate(url);
+    navigate("/");
   }
 }

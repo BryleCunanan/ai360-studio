@@ -16,6 +16,8 @@ const IntentIndex = () => {
   const confirmDeleteRef = useRef(true);
   const [isRefresh, setIsRefresh] = useState(false);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     axios
       .get(import.meta.env.APP_SERVER_URL + "/story")
@@ -27,7 +29,7 @@ const IntentIndex = () => {
       })
       .catch((error) => {
         console.log("story: ", error);
-        deleteLogin(error, "/");
+        deleteLogin(error, navigate);
       })
       .finally(() => {
         setIsLoading(false);
@@ -72,17 +74,17 @@ const IntentIndex = () => {
               })
               .catch((error) => {
                 console.log("Stories: ", error);
-                deleteLogin(error, "/");
+                deleteLogin(error, navigate);
               });
           })
           .catch((error) => {
             console.log("Knowledge: ", error);
-            deleteLogin(error, "/");
+            deleteLogin(error, navigate);
           });
       })
       .catch((error) => {
         console.log("Add Follow-up: ", error);
-        deleteLogin(error, "/");
+        deleteLogin(error, navigate);
       });
 
     if (!parentIntent.followUpIntents) {
@@ -158,7 +160,7 @@ const IntentIndex = () => {
             })
             .catch((error) => {
               console.log(error);
-              deleteLogin(error, "/");
+              deleteLogin(error, navigate);
             });
         }
       },

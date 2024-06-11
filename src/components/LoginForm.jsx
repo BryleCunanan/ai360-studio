@@ -23,6 +23,7 @@ const LoginForm = ({
 
       localStorage.setItem("token", `Bearer ${token}`);
       localStorage.setItem("username", user.name);
+      localStorage.setItem("role", user.role);
       console.log("Local: ", localStorage.getItem("username"));
       handleUsername(localStorage.getItem("username"));
 

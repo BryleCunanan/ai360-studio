@@ -3,6 +3,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import UserForm from "../../components/UserForm";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { deleteLogin } from "../../helpers/loginHelper";
 
 const columns = [
@@ -30,6 +31,8 @@ const UserAccess = () => {
   const [isNewUser, setIsNewUser] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     axios
       .get(import.meta.env.APP_SERVER_URL + "/user")
@@ -38,7 +41,7 @@ const UserAccess = () => {
       })
       .catch((error) => {
         console.log(error);
-        deleteLogin(error, "/");
+        deleteLogin(error, navigate);
       })
       .finally(() => {
         setIsLoading(false);

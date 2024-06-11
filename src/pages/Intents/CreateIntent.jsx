@@ -3,7 +3,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import { DeleteFilled } from "@ant-design/icons";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { deleteLogin } from "../../helpers/loginHelper";
 
 const boxStyle = {
@@ -21,6 +21,8 @@ const CreateIntent = () => {
   const [knowledgeData, setKnowledgeData] = useState([]);
   const [knowledgeID, setKnowledgeID] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (location.pathname !== "/intents/new") {
@@ -42,7 +44,7 @@ const CreateIntent = () => {
             })
             .catch((error) => {
               console.error(error);
-              deleteLogin(error, "/");
+              deleteLogin(error, navigate);
             })
             .finally(() => {
               setIsLoading(false);
@@ -50,7 +52,7 @@ const CreateIntent = () => {
         })
         .catch((error) => {
           console.error(error);
-          deleteLogin(error, "/");
+          deleteLogin(error, navigate);
         })
         .finally(() => {
           setIsLoading(false);
@@ -91,17 +93,17 @@ const CreateIntent = () => {
                 })
                 .catch((error) => {
                   console.log("Stories: ", error);
-                  deleteLogin(error, "/");
+                  deleteLogin(error, navigate);
                 });
             })
             .catch((error) => {
               console.log("Knowledge: ", error);
-              deleteLogin(error, "/");
+              deleteLogin(error, navigate);
             });
         })
         .catch((error) => {
           console.log("Intent: ", error);
-          deleteLogin(error, "/");
+          deleteLogin(error, navigate);
         });
     } else {
       console.log(import.meta.env.APP_SERVER_URL + "/intent/" + id);
@@ -125,12 +127,12 @@ const CreateIntent = () => {
             })
             .catch((error) => {
               console.log(error);
-              deleteLogin(error, "/");
+              deleteLogin(error, navigate);
             });
         })
         .catch((error) => {
           console.log(error);
-          deleteLogin(error, "/");
+          deleteLogin(error, navigate);
         });
     }
   };
