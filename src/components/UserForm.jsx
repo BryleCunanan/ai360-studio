@@ -2,6 +2,7 @@ import { Button, Select, Form, Input } from "antd";
 import axios from "axios";
 import { deleteLogin } from "../helpers/loginHelper";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const UserForm = ({ data, handleDrawerOpen, isNewUser }) => {
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ const UserForm = ({ data, handleDrawerOpen, isNewUser }) => {
           deleteLogin(error, navigate);
         });
     } else {
+      console.log("value: ", value);
       axios
         .post(import.meta.env.APP_SERVER_URL + "/user/" + data._id, value)
         .then((result) => {
@@ -89,12 +91,8 @@ const UserForm = ({ data, handleDrawerOpen, isNewUser }) => {
       >
         <Input.Password />
       </Form.Item>
-      <Form.Item label="Role" name="role">
-        <Select
-          onChange={handleChange}
-          options={items}
-          defaultValue={data.role}
-        />
+      <Form.Item label="Role" name="role" initialValue={data.role}>
+        <Select onChange={handleChange} options={items} />
       </Form.Item>
       <Form.Item
         wrapperCol={{
