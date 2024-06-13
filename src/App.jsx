@@ -46,7 +46,7 @@ const router = createBrowserRouter(
       </Route>
       <Route path="settings" element={<Settings />}>
         <Route path="users" element={<UserAccess />} />
-        <Route path="others" element={<OtherPage />} />
+        <Route path="config" element={<OtherPage />} />
       </Route>
     </Route>
   )
