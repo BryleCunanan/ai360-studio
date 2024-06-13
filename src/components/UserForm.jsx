@@ -80,7 +80,7 @@ const UserForm = ({ data, handleDrawerOpen, isNewUser }) => {
         <Input.Password />
       </Form.Item>
       <Form.Item label="Role" name="role" initialValue={data.role}>
-        <Select onChange={handleChange} options={items} />
+        <Select options={items} />
       </Form.Item>
       <Form.Item
         wrapperCol={{
