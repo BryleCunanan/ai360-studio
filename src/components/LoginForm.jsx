@@ -10,37 +10,36 @@ const LoginForm = ({
   const [form] = Form.useForm();
   const [loginFailed, setLoginFailed] = useState(false);
 
-  const onFinish = async (values) => {
-    try {
-      const response = await axios.post(
-        import.meta.env.APP_SERVER_URL + "/login",
-        {
-          email: values.username,
-          password: values.password,
-        }
-      );
-      const { token, user } = response.data;
+  const onFinish = (values) => {
+    axios
+      .post(import.meta.env.APP_SERVER_URL + "/login", {
+        email: values.username,
+        password: values.password,
+      })
+      .then((response) => {
+        const { token, user } = response.data;
 
-      localStorage.setItem("token", `Bearer ${token}`);
-      localStorage.setItem("username", user.name);
-      localStorage.setItem("role", user.role);
-      handleUsername(localStorage.getItem("username"));
+        localStorage.setItem("token", `Bearer ${token}`);
+        localStorage.setItem("username", user.name);
+        localStorage.setItem("role", user.role);
+        handleUsername(localStorage.getItem("username"));
 
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-      handleLoginButton(true);
-      handleModalUpdate(false);
-      message.success("Login Successful", 2);
-      setLoginFailed(false);
-    } catch (error) {
-      console.error(error);
-      setLoginFailed(true);
-      message.error("Login Failed. Please check your username and password.");
-      form.setFields([
-        { name: "username" },
-        { name: "password", errors: ["Invalid username or password"] },
-      ]);
-    }
+        handleLoginButton(true);
+        handleModalUpdate(false);
+        message.success("Login Successful", 2);
+        setLoginFailed(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        setLoginFailed(true);
+        message.error("Login Failed. Please check your username and password.");
+        form.setFields([
+          { name: "username" },
+          { name: "password", errors: ["Invalid username or password"] },
+        ]);
+      });
   };
 
   return (
