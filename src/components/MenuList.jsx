@@ -11,38 +11,43 @@ import { NavLink, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 const MenuList = ({ darkTheme, isLoggedIn }) => {
+  const location = useLocation();
+
   const [role, setRole] = useState();
+  const [selectedMenuItem, setSelectedMenuItem] = useState();
 
   useEffect(() => {
-    setRole(localStorage.getItem("role"));
-  }, [isLoggedIn]);
+    const currentRole = localStorage.getItem("role");
+    setRole(currentRole);
+    setSelectedMenuItem(location.pathname.split("/")[1]);
+  }, [isLoggedIn, location]);
 
   const items = [
-    { label: "Home", icon: <HomeOutlined />, key: "" },
+    { label: <NavLink to="/">Home</NavLink>, icon: <HomeOutlined />, key: "" },
     {
-      label: "Intents",
+      label: <NavLink to="intents">Intents</NavLink>,
       icon: <MessageOutlined />,
       key: "intents",
     },
     {
-      label: "Entities",
+      label: <NavLink to="entities">Entities</NavLink>,
       icon: <ForkOutlined />,
       key: "entities",
     },
     {
-      label: "Knowledge",
+      label: <NavLink to="knowledge">Knowledge</NavLink>,
       icon: <BookOutlined />,
       key: "knowledge",
       role: "beta",
     },
     {
-      label: "Testing",
+      label: <NavLink to="test">Testing</NavLink>,
       icon: <ApiOutlined />,
       key: "test",
       role: "tester",
     },
     {
-      label: "Settings",
+      label: <NavLink to="settings">Settings</NavLink>,
       icon: <SettingFilled />,
       key: "settings",
       role: "admin",
@@ -51,24 +56,20 @@ const MenuList = ({ darkTheme, isLoggedIn }) => {
 
   const filteredItems = isLoggedIn
     ? items.filter((item) => (item.role ? item.role === role : true))
-    : items.filter((item) => item.key === "/");
-
-  const location = useLocation();
-  const selectedMenuItem = location.pathname.split("/")[1];
+    : items.filter((item) => item.key === "");
 
   return (
     <Menu
       theme={darkTheme ? "dark" : "light"}
       className="menu-bar"
       mode="inline"
-      defaultSelectedKeys={[selectedMenuItem]}
-    >
-      {filteredItems.map((item) => (
-        <Menu.Item key={item.key} icon={item.icon}>
-          <NavLink to={item.key}>{item.label}</NavLink>
-        </Menu.Item>
-      ))}
-    </Menu>
+      selectedKeys={selectedMenuItem}
+      items={filteredItems}
+      onSelect={(item) => {
+        console.log(item);
+        setSelectedMenuItem(item.key);
+      }}
+    />
   );
 };
 

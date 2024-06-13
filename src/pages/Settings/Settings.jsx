@@ -5,13 +5,13 @@ const { Content, Sider } = Layout;
 
 const items = [
   {
-    label: "Users",
+    label: <NavLink to="users">Users</NavLink>,
     icon: <UserOutlined />,
     key: "users",
   },
   {
-    label: "Others",
-    key: "others",
+    label: <NavLink to="config">Config</NavLink>,
+    key: "config",
   },
 ];
 
@@ -27,13 +27,8 @@ const Settings = () => {
           className="settings-menu"
           mode="inline"
           defaultSelectedKeys={[location.pathname.split("/")[2]]}
-        >
-          {items.map((item) => (
-            <Menu.Item key={item.key} icon={item.icon}>
-              <NavLink to={item.key}>{item.label}</NavLink>
-            </Menu.Item>
-          ))}
-        </Menu>
+          items={items}
+        />
       </Sider>
       <Content style={{ backgroundColor: "white" }}>
         <Outlet />
