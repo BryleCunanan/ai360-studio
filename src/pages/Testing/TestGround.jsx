@@ -1,4 +1,4 @@
-import { Button, Card, Divider, Flex, Input, Space } from "antd";
+import { Button, Card, Divider, Flex, Input } from "antd";
 import React, { useState } from "react";
 import axios from "axios";
 import { deleteLogin } from "../../helpers/loginHelper";
@@ -18,10 +18,12 @@ const TestGround = () => {
     followUpItems: [{ MB: "asbnkn2sn92n92" }, { BC6: "nd9q38n9n9nd9n923n" }],
   };
 
+  //"http://54.254.184.220:5005/webhooks/rest/webhook"
+
   const handleSend = () => {
     if (inputValue.trim() !== "") {
       axios
-        .post("http://54.254.184.220:5005/webhooks/rest/webhook", {
+        .post("http://172.17.21.48:5005/webhooks/rest/webhook", {
           message: inputValue,
         })
         .then((response) => {
