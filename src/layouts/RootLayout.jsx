@@ -1,4 +1,4 @@
-import { Button, Layout, theme, Modal, message } from "antd";
+import { Button, Layout, theme, Modal, message, Card } from "antd";
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -18,7 +18,6 @@ const { Header, Sider, Content } = Layout;
 const RootLayout = () => {
   const [darkTheme, setDarkTheme] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(null);
   const [username, setUsername] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -48,58 +47,52 @@ const RootLayout = () => {
     setDarkTheme(!darkTheme);
   };
 
-  const handleLogin = () => {
-    setModalOpen(true);
-  };
-
-  const handleCancel = () => {
-    setModalOpen(false);
-  };
-
   return (
     <>
-      {loading ? (
-        <div className="loading-icon">
-          <LoadingOutlined
-            style={{
-              fontSize: 50,
-            }}
-          />
-        </div>
-      ) : (
-        <Layout>
-          <Sider
-            collapsed={collapsed}
-            collapsible
-            trigger={null}
-            className="sidebar"
-            theme={darkTheme ? "dark" : "light"}
-          >
-            <Logo />
-            <MenuList darkTheme={darkTheme} isLoggedIn={isLoggedIn} />
-            <ToggleThemeButton
-              darkTheme={darkTheme}
-              toggleTheme={toggleTheme}
-            />
-          </Sider>
-          <Layout>
-            <Header
+      {isLoggedIn ? (
+        loading ? (
+          <div className="loading-icon">
+            <LoadingOutlined
               style={{
-                padding: 0,
-                background: colorBgContainer,
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
+                fontSize: 50,
               }}
+            />
+          </div>
+        ) : (
+          <Layout>
+            <Sider
+              collapsed={collapsed}
+              collapsible
+              trigger={null}
+              className="sidebar"
+              theme={darkTheme ? "dark" : "light"}
             >
-              <Button
-                type="text"
-                className="toggle"
-                onClick={() => setCollapsed(!collapsed)}
-                icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              <Logo />
+              <MenuList darkTheme={darkTheme} isLoggedIn={isLoggedIn} />
+              <ToggleThemeButton
+                darkTheme={darkTheme}
+                toggleTheme={toggleTheme}
               />
-              {isLoggedIn ? (
-                username ? (
+            </Sider>
+            <Layout>
+              <Header
+                style={{
+                  padding: 0,
+                  background: colorBgContainer,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Button
+                  type="text"
+                  className="toggle"
+                  onClick={() => setCollapsed(!collapsed)}
+                  icon={
+                    collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />
+                  }
+                />
+                {username ? (
                   <div style={{ marginRight: 20 }}>
                     Hello,{" "}
                     {username.charAt(0).toUpperCase() + username.slice(1)}
@@ -117,48 +110,57 @@ const RootLayout = () => {
                   </div>
                 ) : (
                   <LoadingOutlined style={{ marginRight: 20 }} />
-                )
-              ) : (
-                <Button
-                  style={{ marginRight: 20 }}
-                  type="primary"
-                  onClick={handleLogin}
-                >
-                  Login
-                </Button>
-              )}
-
-              <Modal
-                title="Login"
-                open={modalOpen}
-                width="600px"
-                maskClosable={false}
-                footer={null}
-                preserve={false}
-                destroyOnClose
-                onCancel={handleCancel}
+                )}
+              </Header>
+              <Content
+                style={{
+                  margin: "24px 16px",
+                  padding: 24,
+                  minHeight: 280,
+                  background: colorBgContainer,
+                  borderRadius: borderRadiusLG,
+                  textAlign: "center",
+                }}
               >
-                <LoginForm
-                  handleModalUpdate={setModalOpen}
-                  handleLoginButton={setIsLoggedIn}
-                  handleUsername={setUsername}
-                />
-              </Modal>
-            </Header>
-            <Content
-              style={{
-                margin: "24px 16px",
-                padding: 24,
-                minHeight: 280,
-                background: colorBgContainer,
-                borderRadius: borderRadiusLG,
-                textAlign: "center",
-              }}
-            >
-              <Outlet />
-            </Content>
+                <Outlet />
+              </Content>
+            </Layout>
           </Layout>
-        </Layout>
+        )
+      ) : (
+        <div
+          style={{
+            // position: "fixed",
+            // top: "50%",
+            // left: "50%",
+            // transform: "translate(-50%, -50%)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+            // gap: 25,
+            height: "100vh",
+            // backgroundColor: "#7209b7",
+            backgroundColor: "rgba(0,0,0,0.2)",
+          }}
+        >
+          <h1
+            style={{
+              fontSize: 100,
+              transform: "translateY(27%)",
+              color: "white",
+            }}
+          >
+            AI360 Studio
+          </h1>
+
+          <Card style={{}} bordered={false}>
+            <LoginForm
+              handleLoginButton={setIsLoggedIn}
+              handleUsername={setUsername}
+            />
+          </Card>
+        </div>
       )}
     </>
   );
