@@ -7,7 +7,6 @@ const LoginForm = ({ handleLoginButton, handleUsername }) => {
   const [loginFailed, setLoginFailed] = useState(false);
 
   const onFinish = (values) => {
-    handleLoginButton(true);
     axios
       .post(import.meta.env.APP_SERVER_URL + "/login", {
         email: values.username,

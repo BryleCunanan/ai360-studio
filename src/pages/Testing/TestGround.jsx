@@ -23,7 +23,7 @@ const TestGround = () => {
   const handleSend = () => {
     if (inputValue.trim() !== "") {
       axios
-        .post("http://172.17.21.48:5005/webhooks/rest/webhook", {
+        .post("http://54.254.184.220:5005/webhooks/rest/webhook", {
           message: inputValue,
         })
         .then((response) => {

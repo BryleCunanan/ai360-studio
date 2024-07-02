@@ -18,20 +18,13 @@ import UserAccess from "./pages/Settings/UserAccess";
 import OtherPage from "./pages/Settings/OtherPage";
 import Testing from "./pages/Testing/Testing";
 import TestGround from "./pages/Testing/TestGround";
-
-const requireAuth = (nextState, replace) => {
-  if (!isLoggedIn) {
-    replace({
-      pathname: "/home",
-      state: { nextPathname: nextState.location.pathname },
-    });
-  }
-};
+import Selection from "./pages/Selection";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<RootLayout />}>
       <Route index element={<Home />} />
+      <Route path="select" element={<Selection />} />
       <Route path="intents" element={<Intent />}>
         <Route index element={<IntentIndex />} />
         <Route path=":id" element={<CreateIntent />} />

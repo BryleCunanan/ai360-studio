@@ -1,4 +1,4 @@
-import { Button, Layout, theme, Modal, message, Card } from "antd";
+import { Button, Layout, theme, message, Card } from "antd";
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -21,6 +21,10 @@ const RootLayout = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(null);
   const [username, setUsername] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [style, setStyle] = useState({
+    opacity: 0,
+    transition: "opacity 0.5s",
+  });
 
   const navigate = useNavigate();
 
@@ -43,12 +47,16 @@ const RootLayout = () => {
     setLoading(false);
   }, []);
 
+  useEffect(() => {
+    setStyle({ opacity: 1, transition: "opacity 0.5s" });
+  }, []);
+
   const toggleTheme = () => {
     setDarkTheme(!darkTheme);
   };
 
   return (
-    <>
+    <div style={style}>
       {isLoggedIn ? (
         loading ? (
           <div className="loading-icon">
@@ -64,7 +72,15 @@ const RootLayout = () => {
               collapsed={collapsed}
               collapsible
               trigger={null}
-              className="sidebar"
+              style={{
+                color: "#fff",
+                overflow: "auto",
+                height: "100vh",
+                position: "fixed",
+                left: 0,
+                top: 0,
+                bottom: 0,
+              }}
               theme={darkTheme ? "dark" : "light"}
             >
               <Logo />
@@ -74,7 +90,7 @@ const RootLayout = () => {
                 toggleTheme={toggleTheme}
               />
             </Sider>
-            <Layout>
+            <Layout style={{ marginLeft: 200 }}>
               <Header
                 style={{
                   padding: 0,
@@ -114,12 +130,13 @@ const RootLayout = () => {
               </Header>
               <Content
                 style={{
-                  margin: "24px 16px",
+                  margin: "24px 16px 0",
                   padding: 24,
                   minHeight: 280,
                   background: colorBgContainer,
                   borderRadius: borderRadiusLG,
                   textAlign: "center",
+                  overflow: "initial",
                 }}
               >
                 <Outlet />
@@ -162,7 +179,7 @@ const RootLayout = () => {
           </Card>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

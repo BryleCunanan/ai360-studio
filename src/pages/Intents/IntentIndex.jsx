@@ -15,8 +15,12 @@ const IntentIndex = () => {
   const [isLoading, setIsLoading] = useState(true);
   const confirmDeleteRef = useRef(true);
   const [isRefresh, setIsRefresh] = useState(false);
-
+  const [searchValue, setSearchValue] = useState("");
   const [isDisabled, setIsDisabled] = useState(false);
+  const [style, setStyle] = useState({
+    opacity: 0,
+    transition: "opacity 0.5s",
+  });
 
   const navigate = useNavigate();
 
@@ -28,7 +32,7 @@ const IntentIndex = () => {
       .then((response) => {
         const data = response.data;
         setItems(data);
-        setFilteredItems(data);
+        onSearch(null, searchValue, data);
       })
       .catch((error) => {
         console.log("story: ", error);
@@ -38,10 +42,14 @@ const IntentIndex = () => {
         setIsLoading(false);
         setIsRefresh(false);
       });
-  }, [isRefresh]);
+  }, [isRefresh, searchValue]);
+
+  useEffect(() => {
+    setStyle({ opacity: 1, transition: "opacity 0.5s" });
+  }, []);
 
   const handleAddFollowUp = (index) => {
-    const updatedItems = [...items];
+    const updatedItems = [...filteredItems];
     const parentIntent = updatedItems[index];
     const newFollowUp = parentIntent.parentIntentName + " - custom";
     const parentStory = parentIntent._id;
@@ -174,16 +182,20 @@ const IntentIndex = () => {
     message.destroy(key);
   };
 
-  const onSearch = (e, value) => {
+  const onSearch = (e = null, value, data = items) => {
     if (typeof value != "string") {
       value = e.target.value;
+
+      setSearchValue(value);
     }
     if (value.trim() === "") {
-      setFilteredItems(items);
+      setFilteredItems(data);
     } else {
-      const filteredItems = items.filter((item) =>
+      const filteredItems = data.filter((item) =>
         item.parentIntentName.toLowerCase().includes(value.toLowerCase())
       );
+
+      console.log(filteredItems);
 
       // Update the state with the filtered items
       setFilteredItems(filteredItems);
@@ -191,7 +203,7 @@ const IntentIndex = () => {
   };
 
   return (
-    <>
+    <div style={style}>
       {isLoading ? (
         <div className="loading-icon">
           <LoadingOutlined
@@ -209,6 +221,7 @@ const IntentIndex = () => {
               onChange={onSearch}
               style={{ width: "100%", maxWidth: 800 }}
               size="large"
+              value={searchValue}
             />
             <NavLink to="new">
               <Button type="primary" disabled={isDisabled}>
@@ -267,7 +280,7 @@ const IntentIndex = () => {
                       style={{
                         paddingLeft: 20,
                       }}
-                      locale={{ emptyText: " No intents" }}
+                      locale={{ emptyText: " " }}
                       dataSource={item.followUpIntents}
                       renderItem={(followUp, followUpIndex) =>
                         !hiddenFollowUps[followUpIndex] && (
@@ -306,7 +319,7 @@ const IntentIndex = () => {
           </div>
         </>
       )}
-    </>
+    </div>
   );
 };
 

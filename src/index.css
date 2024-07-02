@@ -10,10 +10,6 @@
   /* background: rgba(98, 0, 245, 255); */
 }
 
-.sidebar {
-  color: #fff;
-}
-
 .logo {
   display: flex;
   align-items: center;
@@ -34,13 +30,11 @@
 }
 
 .menu-bar {
-  height: 90.4vh;
   margin-top: 2rem;
   display: flex;
   flex-direction: column;
   gap: 15px;
   font-size: 1rem;
-  position: relative;
 }
 
 .settings-menu {
