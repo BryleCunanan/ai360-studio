@@ -7,18 +7,26 @@ import { useNavigate } from "react-router-dom";
 const TestGround = () => {
   const [inputValue, setInputValue] = useState("");
   const [botResponse, setBotResponse] = useState({});
+  const [style, setStyle] = useState({
+    opacity: 0,
+    transition: "opacity 0.5s",
+  });
 
   const navigate = useNavigate();
 
-  const testPayload = {
-    intent: "parking",
-    _id: "237925619hkbe287bd8b12",
-    examples: ["park", "car"],
-    followUp: false,
-    followUpItems: [{ MB: "asbnkn2sn92n92" }, { BC6: "nd9q38n9n9nd9n923n" }],
-  };
+  // const testPayload = {
+  //   intent: "parking",
+  //   _id: "237925619hkbe287bd8b12",
+  //   examples: ["park", "car"],
+  //   followUp: false,
+  //   followUpItems: [{ MB: "asbnkn2sn92n92" }, { BC6: "nd9q38n9n9nd9n923n" }],
+  // };
 
   //"http://54.254.184.220:5005/webhooks/rest/webhook"
+
+  useEffect(() => {
+    setStyle({ opacity: 1, transition: "opacity 0.5s" });
+  }, []);
 
   const handleSend = () => {
     if (inputValue.trim() !== "") {
@@ -42,7 +50,7 @@ const TestGround = () => {
   };
 
   return (
-    <div>
+    <div style={style}>
       <Flex style={{ width: "100%" }} justify="space-evenly" align="center">
         <Input
           allowClear

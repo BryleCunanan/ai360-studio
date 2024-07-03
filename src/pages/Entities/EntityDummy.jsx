@@ -15,8 +15,17 @@ const data = [
 ];
 
 const EntityDummy = () => {
+  const [style, setStyle] = useState({
+    opacity: 0,
+    transition: "opacity 0.5s",
+  });
+
+  useEffect(() => {
+    setStyle({ opacity: 1, transition: "opacity 0.5s" });
+  }, []);
+
   return (
-    <div>
+    <div style={style}>
       <Flex style={{}} justify="space-evenly" align="center">
         <Input
           style={{ width: 800 }}

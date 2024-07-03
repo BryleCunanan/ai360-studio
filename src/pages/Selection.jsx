@@ -3,6 +3,11 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 
 const Selection = () => {
+  const [style, setStyle] = useState({
+    opacity: 0,
+    transition: "opacity 0.5s",
+  });
+
   const data = [
     {
       title: "Rasa",
@@ -12,15 +17,22 @@ const Selection = () => {
     },
   ];
 
+  useEffect(() => {
+    setStyle({ opacity: 1, transition: "opacity 0.5s" });
+  }, []);
+
   return (
     <div
-      style={{
-        padding: 10,
-        justifyContent: "center",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
+      style={
+        (style,
+        {
+          padding: 10,
+          justifyContent: "center",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        })
+      }
     >
       <h1 style={{}}>Select a Model</h1>
       <List

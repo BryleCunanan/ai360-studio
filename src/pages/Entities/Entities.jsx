@@ -4,6 +4,11 @@ import { deleteLogin } from "../../helpers/loginHelper";
 import { useEffect } from "react";
 
 const Entities = () => {
+  const [style, setStyle] = useState({
+    opacity: 0,
+    transition: "opacity 0.5s",
+  });
+
   const navigate = useNavigate();
   useEffect(() => {
     if (!axios.defaults.headers.common["Authorization"]) {
@@ -11,17 +16,23 @@ const Entities = () => {
     }
   }, []);
 
+  useEffect(() => {
+    setStyle({ opacity: 1, transition: "opacity 0.5s" });
+  }, []);
+
   return (
-    <h1
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "50%",
-      }}
-    >
-      Coming Soon...
-    </h1>
+    <div style={style}>
+      <h1
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "50%",
+        }}
+      >
+        Coming Soon...
+      </h1>
+    </div>
   );
   // <Outlet />;
 };

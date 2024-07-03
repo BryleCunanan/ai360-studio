@@ -24,6 +24,10 @@ const CreateIntent = () => {
   const [knowledgeID, setKnowledgeID] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isDisabled, setIsDisabled] = useState(false);
+  const [style, setStyle] = useState({
+    opacity: 0,
+    transition: "opacity 0.5s",
+  });
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -66,6 +70,10 @@ const CreateIntent = () => {
       setIsLoading(false);
     }
   }, [id, location.pathname]);
+
+  useEffect(() => {
+    setStyle({ opacity: 1, transition: "opacity 0.5s" });
+  }, []);
 
   const handleSubmit = () => {
     if (location.pathname === "/intents/new") {
@@ -184,7 +192,7 @@ const CreateIntent = () => {
     }
   };
   return (
-    <>
+    <div style={style}>
       {isLoading ? (
         <div className="loading-icon">
           <LoadingOutlined
@@ -313,7 +321,7 @@ const CreateIntent = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
