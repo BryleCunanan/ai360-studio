@@ -18,6 +18,11 @@ import { Button } from "antd";
 const Knowledge = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [intentData, setIntentData] = useState([]);
+  const [style, setStyle] = useState({
+    opacity: 0,
+    transition: "opacity 0.5s",
+  });
+
 
   const flow = useReactFlow();
 
@@ -41,6 +46,10 @@ const Knowledge = () => {
       .finally(() => {
         setIsLoading(false);
       });
+  }, []);
+
+  useEffect(() => {
+    setStyle({ opacity: 1, transition: "opacity 0.5s" });
   }, []);
 
   const initialNodes = [
@@ -70,7 +79,7 @@ const Knowledge = () => {
   );
 
   return (
-    <>
+    <div style={style}>
       {isLoading ? (
         <LoadingOutlined />
       ) : (
@@ -102,7 +111,7 @@ const Knowledge = () => {
           </ReactFlow>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
