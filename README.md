@@ -1,3 +1,3 @@
-# AI 360 Studio
+# RASA Web UI
 
-A Garden for AI Model
+A Web application UI for training a RASA conversational Chatbot
